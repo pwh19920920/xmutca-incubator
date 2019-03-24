@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: xmutca-incubator-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8888
+      config:
+        serverAddr: localhost:8888
+        file-extension: yml
+    gateway:
+      routes:
+        - id: xmutca-incubator-example-consumer
+          # lb代表从注册中心获取服务，且已负载均衡方式转发
+          uri: lb://xmutca-incubator-example-consumer
+          predicates:
+            - Path=/consumer/**
+          filters:
+            - StripPrefix=1
+            - RewritePath=/consumer/(?<remaining>.*), /$\{remaining}
+        - id: xmutca-incubator-example-provider
+          uri: lb://xmutca-incubator-example-provider
+          predicates:
+            - Path=/provider/**
+          filters:
+            # 加上StripPrefix=1，否则转发到后端服务时会带上consumer前缀
+            - StripPrefix=1
+            - RewritePath=/provider/(?<remaining>.*), /$\{remaining}
+            - name: RateLimiter
+              args:
+                key-resolver: '#{@limiterKeyResolver}' #用于限流的键的解析器的 Bean 对象的名字。它使用 SpEL 表达式根据#{@beanName}从 Spring 容器中获取 Bean 对象
+                redis-rate-limiter.replenishRate: 1 #令牌桶填充速率（其实也就是希望用户平均每秒执行多少请求。但是令牌桶优点是允许瞬间的激增请求）
+                redis-rate-limiter.burstCapacity: 2 #令牌桶总容量。
+        - id: default_path_404 # 默认配置地址，404地址
+          uri: https://baidu.com
+          order: 10000
+          predicates:
+            - Path=/**
+          filters:
+            - SetPath=/
+      default-filters:
+       # - RequestLogger=true
+        - name: Hystrix
+          args:
+            name: gatewayFallbackCommand
+            fallbackUri: forward:/fallback
+        - name: Retry
+          args:
+            retries: 3
+            statuses: BAD_GATEWAY
+            methods: GET, DELETE, PUT #只有幂等的才允许重试
+
+
+# hystrix 信号量隔离，3秒后自动超时
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 3000

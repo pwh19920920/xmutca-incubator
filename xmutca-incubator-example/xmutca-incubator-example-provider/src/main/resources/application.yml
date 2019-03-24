@@ -1,0 +1,2 @@
+server:
+  port: 0 # 线上环境要写死，方便docker expose
