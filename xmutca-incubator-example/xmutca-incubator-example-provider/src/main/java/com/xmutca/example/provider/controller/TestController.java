@@ -1,11 +1,15 @@
 package com.xmutca.example.provider.controller;
 
-import com.xmutca.example.provider.config.DefaultProperties;
-import lombok.NonNull;
+import com.xmutca.incubator.core.common.exception.ServiceException;
+import com.xmutca.incubator.core.common.response.Receipt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @version Revision: 0.0.1
@@ -17,11 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RefreshScope
 public class TestController {
 
-    @NonNull
-    private DefaultProperties defaultProperties;
+    AtomicLong atomicLong = new AtomicLong();
 
+    /**
+     * test provider
+     * @return
+     */
     @RequestMapping("/provider")
-    public String test() {
-        return "provider";
+    public Receipt test() {
+        System.out.println("provider:" + atomicLong.getAndIncrement());
+        //return new Receipt("provider");
+        throw new ServiceException("xxxx");
     }
 }

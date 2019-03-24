@@ -1,5 +1,6 @@
 package com.xmutca.incubator.core.common.response;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 import lombok.Setter;
@@ -105,7 +106,7 @@ public class Results<T> extends Result<Collection<T>> {
          */
         public void setSize(int size) {
             if (size > MAX_LINE) {
-                size = 50;
+                size = MAX_LINE;
             }
             this.size = size;
         }
@@ -119,5 +120,24 @@ public class Results<T> extends Result<Collection<T>> {
         public String getSortType() {
             return sortType.getType();
         }
+    }
+
+    public Results(Integer status, String message, Collection<T> data) {
+        super(status, message, data);
+    }
+
+    public Results(Integer status, String message) {
+        super(status, message);
+    }
+
+    public Results(String message) {
+        super(message);
+    }
+
+    public Results() {}
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

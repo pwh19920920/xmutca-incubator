@@ -1,12 +1,11 @@
 package com.xmutca.example.consumer.controller;
 
-import com.alibaba.fastjson.JSON;
+import com.xmutca.example.consumer.feign.ProviderFeign;
+import com.xmutca.incubator.core.common.response.Receipt;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * @version Revision: 0.0.1
@@ -18,13 +17,10 @@ import org.springframework.web.client.RestTemplate;
 public class TestController {
 
     @NonNull
-    private final RestTemplate restTemplate;
-
-    @NonNull
-    private DiscoveryClient discoveryClient;
+    private ProviderFeign providerFeign;
 
     @RequestMapping("/consumer")
-    public String test() {
-        return "consumer";
+    public Receipt test() {
+        return providerFeign.provider();
     }
 }

@@ -1,5 +1,8 @@
-package com.xmutca.incubator.gateway.support.limiter;
+package com.xmutca.incubator.gateway.filter.limiter;
 
+import com.alibaba.fastjson.JSON;
+import com.xmutca.incubator.core.common.response.Receipt;
+import com.xmutca.incubator.core.common.response.Result;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -79,7 +82,8 @@ public class RateLimiterGatewayFilterFactory extends RequestRateLimiterGatewayFi
                         return chain.filter(exchange);
                     }
 
-                    DataBuffer data = originResponse.bufferFactory().wrap("aaa".getBytes());
+                    Receipt resp = new Receipt(config.getStatusCode().value(), "request to many, please wait for a moment!");
+                    DataBuffer data = originResponse.bufferFactory().wrap(JSON.toJSONBytes(resp));
                     setResponseStatus(exchange, config.getStatusCode());
                     return originResponse.writeWith(Flux.just(data));
                 });

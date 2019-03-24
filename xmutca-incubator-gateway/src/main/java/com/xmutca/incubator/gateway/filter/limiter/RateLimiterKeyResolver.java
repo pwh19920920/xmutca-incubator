@@ -1,4 +1,4 @@
-package com.xmutca.incubator.gateway.support.limiter;
+package com.xmutca.incubator.gateway.filter.limiter;
 
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.web.server.ServerWebExchange;

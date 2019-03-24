@@ -5,3 +5,14 @@ server:
 logging:
   level:
     org: debug
+
+
+# 暴露端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always

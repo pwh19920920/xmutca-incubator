@@ -1,2 +1,16 @@
 server:
   port: 9898
+
+
+# 暴露端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+feign:
+  hystrix:
+    enabled: true

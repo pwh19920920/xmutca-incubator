@@ -7,4 +7,13 @@ package com.xmutca.incubator.core.common.response;
  */
 public class Receipt extends Result<String> {
 
+    public Receipt(Integer status, String message) {
+        super(status, message);
+    }
+
+    public Receipt(String message) {
+        super(DEFAULT_STATUS, message);
+    }
+
+    public Receipt() {}
 }

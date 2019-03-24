@@ -17,6 +17,8 @@
 		<spring-alibaba.version>0.2.1.RELEASE</spring-alibaba.version>
 		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
 		<fastjson.version>1.2.56</fastjson.version>
+
+		<xmutca-incubator-core-common.version>0.0.1-SNAPSHOT</xmutca-incubator-core-common.version>
 	</properties>
 
 	<modules>
@@ -57,6 +59,12 @@
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>
 				<version>${fastjson.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-core-common</artifactId>
+				<version>${xmutca-incubator-core-common.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

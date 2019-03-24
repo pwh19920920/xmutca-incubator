@@ -1,4 +1,4 @@
-package com.xmutca.incubator.gateway.support.limiter;
+package com.xmutca.incubator.gateway.filter.limiter;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
