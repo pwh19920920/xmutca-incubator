@@ -3,16 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xmutca</groupId>
-	<artifactId>xmutca-incubator-core</artifactId>
+	<artifactId>xmutca-incubator-starters</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>xmutca-incubator-core</name>
-	<description>xmutca-incubator-core</description>
+	<name>xmutca-incubator-starters</name>
+	<description>xmutca-incubator-starters</description>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>xmutca-incubator-core-common</module>
-		<module>xmutca-incubator-core-web</module>
-		<module>xmutca-incubator-core-webflux</module>
-		<module>xmutca-incubator-core-feign</module>
+		<module>xmutca-incubator-starter-web</module>
+		<module>xmutca-incubator-starter-feign</module>
 	</modules>
 </project>

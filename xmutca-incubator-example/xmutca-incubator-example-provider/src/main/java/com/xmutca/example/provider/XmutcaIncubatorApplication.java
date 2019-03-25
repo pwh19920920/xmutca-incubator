@@ -14,5 +14,4 @@ public class XmutcaIncubatorApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(XmutcaIncubatorApplication.class, args);
 	}
-
 }

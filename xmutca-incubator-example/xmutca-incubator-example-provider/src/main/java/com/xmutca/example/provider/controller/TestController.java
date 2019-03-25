@@ -4,9 +4,7 @@ import com.xmutca.incubator.core.common.exception.ServiceException;
 import com.xmutca.incubator.core.common.response.Receipt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -30,7 +28,7 @@ public class TestController {
     @RequestMapping("/provider")
     public Receipt test() {
         System.out.println("provider:" + atomicLong.getAndIncrement());
-        //return new Receipt("provider");
-        throw new ServiceException("xxxx");
+        //return new HystrixBadRequestExceptionReceipt("provider");
+        throw new ServiceException("xxx");
     }
 }

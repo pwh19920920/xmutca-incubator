@@ -19,12 +19,17 @@
 		<fastjson.version>1.2.56</fastjson.version>
 
 		<xmutca-incubator-core-common.version>0.0.1-SNAPSHOT</xmutca-incubator-core-common.version>
+		<xmutca-incubator-core-web.version>0.0.1-SNAPSHOT</xmutca-incubator-core-web.version>
+		<xmutca-incubator-core-feign.version>0.0.1-SNAPSHOT</xmutca-incubator-core-feign.version>
+		<xmutca-incubator-starter-web.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-web.version>
+		<xmutca-incubator-starter-feign.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-feign.version>
 	</properties>
 
 	<modules>
 		<module>xmutca-incubator-example</module>
 		<module>xmutca-incubator-gateway</module>
 		<module>xmutca-incubator-core</module>
+		<module>xmutca-incubator-starters</module>
 	</modules>
 
 	<!-- 管理依赖版本号,子项目不会默认依赖 -->
@@ -65,6 +70,30 @@
 				<groupId>com.xmutca</groupId>
 				<artifactId>xmutca-incubator-core-common</artifactId>
 				<version>${xmutca-incubator-core-common.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-core-feign</artifactId>
+				<version>${xmutca-incubator-core-feign.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-core-web</artifactId>
+				<version>${xmutca-incubator-core-web.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-starter-web</artifactId>
+				<version>${xmutca-incubator-starter-web.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-starter-feign</artifactId>
+				<version>${xmutca-incubator-starter-feign.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

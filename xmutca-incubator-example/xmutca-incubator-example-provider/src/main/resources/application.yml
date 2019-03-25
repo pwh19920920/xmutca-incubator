@@ -16,3 +16,9 @@ management:
 feign:
   hystrix:
     enabled: true
+
+
+debug: true
+logging:
+  level:
+    root: debug

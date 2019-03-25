@@ -1,9 +1,8 @@
 package com.xmutca.incubator.core.common.response;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.regex.Pattern;
 
 /**
  * @version Revision: 0.0.1
@@ -47,5 +46,10 @@ public class Result<T> {
 
     public Result() {
         this(DEFAULT_STATUS, null, null);
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }
