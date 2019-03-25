@@ -28,7 +28,6 @@ public class TestController {
     @RequestMapping("/provider")
     public Receipt test() {
         System.out.println("provider:" + atomicLong.getAndIncrement());
-        //return new HystrixBadRequestExceptionReceipt("provider");
         throw new ServiceException("xxx");
     }
 }

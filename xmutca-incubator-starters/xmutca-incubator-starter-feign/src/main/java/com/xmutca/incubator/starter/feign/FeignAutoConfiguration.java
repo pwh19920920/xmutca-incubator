@@ -1,7 +1,6 @@
 package com.xmutca.incubator.starter.feign;
 
 import com.xmutca.incubator.core.feign.EnableFeign;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 
 /**

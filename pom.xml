@@ -17,10 +17,12 @@
 		<spring-alibaba.version>0.2.1.RELEASE</spring-alibaba.version>
 		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
 		<fastjson.version>1.2.56</fastjson.version>
+		<logstash-logback-encoder.verison>4.11</logstash-logback-encoder.verison>
 
 		<xmutca-incubator-core-common.version>0.0.1-SNAPSHOT</xmutca-incubator-core-common.version>
 		<xmutca-incubator-core-web.version>0.0.1-SNAPSHOT</xmutca-incubator-core-web.version>
 		<xmutca-incubator-core-feign.version>0.0.1-SNAPSHOT</xmutca-incubator-core-feign.version>
+		<xmutca-incubator-core-logger.version>0.0.1-SNAPSHOT</xmutca-incubator-core-logger.version>
 		<xmutca-incubator-starter-web.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-web.version>
 		<xmutca-incubator-starter-feign.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-feign.version>
 	</properties>
@@ -67,6 +69,12 @@
 			</dependency>
 
 			<dependency>
+				<groupId>net.logstash.logback</groupId>
+				<artifactId>logstash-logback-encoder</artifactId>
+				<version>${logstash-logback-encoder.verison}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>com.xmutca</groupId>
 				<artifactId>xmutca-incubator-core-common</artifactId>
 				<version>${xmutca-incubator-core-common.version}</version>
@@ -76,6 +84,12 @@
 				<groupId>com.xmutca</groupId>
 				<artifactId>xmutca-incubator-core-feign</artifactId>
 				<version>${xmutca-incubator-core-feign.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-core-logger</artifactId>
+				<version>${xmutca-incubator-core-logger.version}</version>
 			</dependency>
 
 			<dependency>

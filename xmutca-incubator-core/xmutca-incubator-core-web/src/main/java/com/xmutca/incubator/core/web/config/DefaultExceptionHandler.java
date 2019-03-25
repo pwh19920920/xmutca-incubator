@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -157,7 +156,7 @@ public class DefaultExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = BindException.class)
     public Result handleBindException(BindException ex) {
-        return handleBaseBindAndMethodArgumentNotValidMessage(ex, ex.getAllErrors());
+        return handleBaseBindAndMethodArgumentNotValidMessage(ex.getAllErrors());
     }
 
     /**
@@ -168,7 +167,7 @@ public class DefaultExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Receipt handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return handleBaseBindAndMethodArgumentNotValidMessage(ex, ex.getBindingResult().getAllErrors());
+        return handleBaseBindAndMethodArgumentNotValidMessage(ex.getBindingResult().getAllErrors());
     }
 
     /**
@@ -177,7 +176,7 @@ public class DefaultExceptionHandler {
      * @param allErrors
      * @return
      */
-    protected Receipt handleBaseBindAndMethodArgumentNotValidMessage(Exception ex, List<ObjectError> allErrors) {
+    protected Receipt handleBaseBindAndMethodArgumentNotValidMessage(List<ObjectError> allErrors) {
         StringBuilder buffer = new StringBuilder();
         for (ObjectError error : allErrors) {
             buffer.append(error.getDefaultMessage()).append(";");

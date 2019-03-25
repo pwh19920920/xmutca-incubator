@@ -14,5 +14,6 @@
 		<module>xmutca-incubator-core-web</module>
 		<module>xmutca-incubator-core-webflux</module>
 		<module>xmutca-incubator-core-feign</module>
+		<module>xmutca-incubator-core-logger</module>
 	</modules>
 </project>
