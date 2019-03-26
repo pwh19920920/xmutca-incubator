@@ -1,11 +1,5 @@
 server:
-  port: 8080
-
-
-logging:
-  level:
-    org: debug
-
+  port: 8787
 
 # 暴露端点
 management:

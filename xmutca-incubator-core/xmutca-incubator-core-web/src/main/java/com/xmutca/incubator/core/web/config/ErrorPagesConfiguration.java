@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @version Revision: 0.0.1
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @Date: 2019-03-25
  */
 @Configuration
+@RestController
 public class ErrorPagesConfiguration implements ErrorPageRegistrar {
 
     /**
