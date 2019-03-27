@@ -2,6 +2,7 @@ package com.xmutca.incubator.core.web;
 
 import com.xmutca.incubator.core.web.config.DefaultExceptionHandler;
 import com.xmutca.incubator.core.web.config.ErrorPagesConfiguration;
+import com.xmutca.incubator.core.web.config.RequestLoggerConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -14,6 +15,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 @Documented
-@Import({DefaultExceptionHandler.class, ErrorPagesConfiguration.class})
+@Import({DefaultExceptionHandler.class, ErrorPagesConfiguration.class, RequestLoggerConfiguration.class})
 public @interface EnableWeb {
 }
