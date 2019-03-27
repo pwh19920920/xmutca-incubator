@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -57,7 +54,6 @@ public class DefaultExceptionHandler {
     /**
      * 文件上传不符合要求
      * @param ex
-     * @param request
      * @return
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -78,37 +74,6 @@ public class DefaultExceptionHandler {
     }
 
     /**
-     * 数据绑定异常
-     * @param ex
-     * @return
-     */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {ServletRequestBindingException.class})
-    public Receipt handleServletRequestBindingException(ServletRequestBindingException ex) {
-        return new Receipt(HttpStatus.BAD_REQUEST.value(), "请求参数不正确");
-    }
-
-    /**
-     * 请求的方法不存在
-     * @return
-     */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public Receipt handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
-        return new Receipt(HttpStatus.BAD_REQUEST.value(), "请求有误");
-    }
-
-    /**
-     * 不支持的媒体类型
-     * @return
-     */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public Receipt handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
-        return new Receipt(HttpStatus.BAD_REQUEST.value(), "请求有误");
-    }
-
-    /**
      * 错误的数字格式
      * @param ex
      * @return
@@ -122,7 +87,6 @@ public class DefaultExceptionHandler {
     /**
      * 请求数据体为空
      * @param ex
-     * @param request
      * @return
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -139,8 +103,8 @@ public class DefaultExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = ConstraintViolationException.class)
     public Result handleConstraintViolationException(ConstraintViolationException ex) {
-        StringBuilder buffer = new StringBuilder();
         Set<ConstraintViolation<?>> set = ex.getConstraintViolations();
+        StringBuilder buffer = new StringBuilder();
         for (ConstraintViolation<?> v : set) {
             buffer.append(v.getMessage()).append(";");
         }

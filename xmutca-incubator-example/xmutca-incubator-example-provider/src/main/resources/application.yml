@@ -16,3 +16,9 @@ management:
 feign:
   hystrix:
     enabled: true
+
+
+logging:
+  file: logs/${spring.application.name}-log
+  level:
+    com.xmutca: info

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${X:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
     <!-- 获取spring的参数 -->
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
-    <springProperty scope="context" name="springAppInstanceId" source="eureka.instance.instanceId"/>
 
     <!-- 测试环境 + 开发环境. 多个使用逗号隔开. -->
-    <springProfile name="debug, dev, default, docker">
+    <springProfile name="debug, dev, docker, default">
         <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
@@ -19,8 +18,9 @@
 
     <!-- 生产环境. -->
     <springProfile name="test, prod, prod-peer1, prod-peer2">
+        <conversionRule conversionWord="tid" converterClass="org.apache.skywalking.apm.toolkit.log.logback.v1.x.LogbackPatternConverter"/>
+
         <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <filter class="com.xmutca.cloud.core.logback.UselessMessageFilter" />
             <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
                 <jsonFactoryDecorator class="com.xmutca.incubator.core.logger.decorator.MyJsonFactoryDecorator"/>
                 <providers>
@@ -32,9 +32,9 @@
                             "span": "%X{X-B3-SpanId:-}",
                             "parent": "%X{X-B3-ParentSpanId:-}",
                             "exportable": "%X{X-Span-Export:-}",
+                            "skyWalkingId": "%tid",
                             "pid": "${PID:-}",
                             "service": "${springAppName:-}",
-                            "instanceId": "${springAppInstanceId:-}",
                             "level": "%level",
                             "thread": "%thread",
                             "class": "%logger{40}.%M",
@@ -45,6 +45,7 @@
                     </pattern>
                 </providers>
             </encoder>
+
             <file>${LOG_FILE}</file>
 
             <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -56,6 +57,10 @@
         </appender>
 
         <logger name="org.springframework" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <logger name="com.alibaba.nacos" level="INFO" additivity="false">
             <appender-ref ref="CONSOLE"/>
         </logger>
 

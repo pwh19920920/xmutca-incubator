@@ -11,7 +11,7 @@
 	<groupId>com.xmutca</groupId>
 	<artifactId>xmutca-incubator-gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>xmutca-incubator-example-gateway</name>
+	<name>xmutca-incubator-gateway</name>
 
 	<dependencies>
 		<dependency>
@@ -62,8 +62,13 @@
 
 		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-core-common</artifactId>
+			<artifactId>xmutca-incubator-core-logger</artifactId>
 		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.cloud</groupId>-->
+			<!--<artifactId>spring-cloud-starter-sleuth</artifactId>-->
+		<!--</dependency>-->
 	</dependencies>
 
 	<build>

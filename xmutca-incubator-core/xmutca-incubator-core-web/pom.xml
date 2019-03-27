@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-core-common</artifactId>
+			<artifactId>xmutca-incubator-core-logger</artifactId>
 		</dependency>
 
 		<dependency>

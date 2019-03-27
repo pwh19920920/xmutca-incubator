@@ -4,6 +4,7 @@ import com.xmutca.example.consumer.feign.ProviderFeign;
 import com.xmutca.incubator.core.common.response.Receipt;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: weihuang.peng
  * @Date: 2019-03-18
  */
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class TestController {
@@ -21,6 +23,7 @@ public class TestController {
 
     @RequestMapping("/consumer")
     public Receipt test() {
+        log.info("consumer request");
         return providerFeign.provider();
     }
 }

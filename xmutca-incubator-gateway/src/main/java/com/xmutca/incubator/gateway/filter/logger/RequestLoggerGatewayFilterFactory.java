@@ -1,12 +1,10 @@
 package com.xmutca.incubator.gateway.filter.logger;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
 
 /**
  * @version Revision: 0.0.1
@@ -15,7 +13,7 @@ import reactor.core.publisher.Mono;
  */
 @Slf4j
 @Component
-public class RequestLoggerGatewayFilterFactory implements Ordered, GlobalFilter {
+public class RequestLoggerGatewayFilterFactory extends AbstractGatewayFilterFactory implements Ordered {
 
     @Override
     public int getOrder() {
@@ -23,9 +21,11 @@ public class RequestLoggerGatewayFilterFactory implements Ordered, GlobalFilter 
     }
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("system request for path: {}", exchange.getRequest().getPath());
-        return chain.filter(exchange);
+    public GatewayFilter apply(Object config) {
+        return (exchange, chain) -> {
+            log.info("system request for path: {}", exchange.getRequest().getPath());
+            return chain.filter(exchange);
+        };
     }
 }
 

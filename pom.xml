@@ -17,7 +17,8 @@
 		<spring-alibaba.version>0.2.1.RELEASE</spring-alibaba.version>
 		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
 		<fastjson.version>1.2.56</fastjson.version>
-		<logstash-logback-encoder.verison>4.11</logstash-logback-encoder.verison>
+		<logstash-logback-encoder.verison>5.3</logstash-logback-encoder.verison>
+		<org.apache.skywalking.version>6.0.0-GA</org.apache.skywalking.version>
 
 		<xmutca-incubator-core-common.version>0.0.1-SNAPSHOT</xmutca-incubator-core-common.version>
 		<xmutca-incubator-core-web.version>0.0.1-SNAPSHOT</xmutca-incubator-core-web.version>
@@ -72,6 +73,12 @@
 				<groupId>net.logstash.logback</groupId>
 				<artifactId>logstash-logback-encoder</artifactId>
 				<version>${logstash-logback-encoder.verison}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.skywalking</groupId>
+				<artifactId>apm-toolkit-logback-1.x</artifactId>
+				<version>${org.apache.skywalking.version}</version>
 			</dependency>
 
 			<dependency>

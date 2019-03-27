@@ -28,9 +28,9 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
      * @return
      */
     @GetMapping("/error/fallback")
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
     public Mono<Receipt> fallback() {
-        return Mono.just(new Receipt(HttpStatus.INTERNAL_SERVER_ERROR.value(), "sorry, system is fallback, please wait for a moment!"));
+        return Mono.just(new Receipt(HttpStatus.BAD_GATEWAY.value(), "sorry, system is fallback, please wait for a moment!"));
     }
 
     @Override

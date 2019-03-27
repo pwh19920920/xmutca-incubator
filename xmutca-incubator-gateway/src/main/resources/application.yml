@@ -10,3 +10,8 @@ management:
   endpoint:
     health:
       show-details: always
+
+logging:
+  file: logs/${spring.application.name}-log
+  level:
+    com.xmutca: info

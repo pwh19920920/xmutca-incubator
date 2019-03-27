@@ -39,7 +39,7 @@ spring:
           filters:
             - SetPath=/
       default-filters:
-       # - RequestLogger=true
+        - RequestLogger
         - name: Hystrix
           args:
             name: gatewayFallbackCommand

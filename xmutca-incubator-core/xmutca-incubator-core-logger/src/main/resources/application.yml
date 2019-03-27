@@ -1,2 +1,4 @@
 logging:
   config: classpath:logback-spring.xml
+  level:
+    com.xmutca: info
