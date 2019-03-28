@@ -41,6 +41,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>com.xmutca</groupId>
 			<artifactId>xmutca-incubator-starter-web</artifactId>
 		</dependency>
@@ -65,6 +70,7 @@
 					<execution>
 						<goals>
 							<goal>repackage</goal>
+							<goal>build-info</goal>
 						</goals>
 					</execution>
 				</executions>

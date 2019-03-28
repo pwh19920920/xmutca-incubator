@@ -1,6 +1,5 @@
 server:
-  port: 9898
-
+  port: 8686
 
 # 暴露端点
 management:
@@ -12,18 +11,7 @@ management:
     health:
       show-details: always
 
-feign:
-  hystrix:
-    enabled: true
-
-
 logging:
   file: logs/${spring.application.name}-log
   level:
     com.xmutca: info
-
-spring:
-  boot:
-    admin:
-      client:
-        url: http://localhost:8686

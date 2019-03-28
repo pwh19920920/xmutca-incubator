@@ -56,6 +56,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
@@ -64,11 +69,6 @@
 			<groupId>com.xmutca</groupId>
 			<artifactId>xmutca-incubator-core-logger</artifactId>
 		</dependency>
-
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.cloud</groupId>-->
-			<!--<artifactId>spring-cloud-starter-sleuth</artifactId>-->
-		<!--</dependency>-->
 	</dependencies>
 
 	<build>
@@ -80,6 +80,7 @@
 					<execution>
 						<goals>
 							<goal>repackage</goal>
+							<goal>build-info</goal>
 						</goals>
 					</execution>
 				</executions>

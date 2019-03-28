@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: xmutca-incubator-monitor
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8888
+      config:
+        serverAddr: localhost:8888
+        file-extension: yml

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author: weihuang.peng
  * @Date: 2019-03-27
  */
+@Slf4j
 @Configuration
 public class RequestLoggerConfiguration implements WebMvcConfigurer {
 
@@ -30,7 +31,6 @@ public class RequestLoggerConfiguration implements WebMvcConfigurer {
      *
      * @author weihuang
      */
-    @Slf4j
     public class RequestLoggerInterceptor implements HandlerInterceptor {
 
         @Override
