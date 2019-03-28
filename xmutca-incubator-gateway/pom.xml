@@ -69,6 +69,11 @@
 			<groupId>com.xmutca</groupId>
 			<artifactId>xmutca-incubator-core-logger</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
