@@ -6,11 +6,13 @@ import com.xmutca.incubator.core.common.response.Result;
 import feign.Response;
 import feign.Util;
 import feign.codec.ErrorDecoder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 /**
  * @author
  */
+@Slf4j
 public class FeignErrorDecode implements ErrorDecoder {
 
     @Override

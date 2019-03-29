@@ -2,7 +2,6 @@ package com.xmutca.incubator.gateway.filter.limiter;
 
 import com.alibaba.fastjson.JSON;
 import com.xmutca.incubator.core.common.response.Receipt;
-import com.xmutca.incubator.core.common.response.Result;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -56,10 +55,10 @@ public class RateLimiterGatewayFilterFactory extends RequestRateLimiterGatewayFi
 
     @Override
     public GatewayFilter apply(Config config) {
-        KeyResolver resolver = getOrDefault(config.getKeyResolver(), defaultKeyResolver);
-        RateLimiter<Object> limiter = getOrDefault(config.getRateLimiter(), defaultRateLimiter);
-        boolean denyEmpty = getOrDefault(config.getDenyEmptyKey(), denyEmptyKey);
-        HttpStatusHolder emptyKeyStatus = HttpStatusHolder.parse(getOrDefault(config.getEmptyKeyStatus(), this.emptyKeyStatusCode));
+        KeyResolver resolver = getOrDefaultValue(config.getKeyResolver(), defaultKeyResolver);
+        RateLimiter<Object> limiter = getOrDefaultValue(config.getRateLimiter(), defaultRateLimiter);
+        boolean denyEmpty = getOrDefaultValue(config.getDenyEmptyKey(), denyEmptyKey);
+        HttpStatusHolder emptyKeyStatus = HttpStatusHolder.parse(getOrDefaultValue(config.getEmptyKeyStatus(), this.emptyKeyStatusCode));
 
         return (exchange, chain) -> {
             Route route = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR);
@@ -92,7 +91,7 @@ public class RateLimiterGatewayFilterFactory extends RequestRateLimiterGatewayFi
     }
 
 
-    private <T> T getOrDefault(T configValue, T defaultValue) {
+    private <T> T getOrDefaultValue(T configValue, T defaultValue) {
         return (configValue != null) ? configValue : defaultValue;
     }
 }

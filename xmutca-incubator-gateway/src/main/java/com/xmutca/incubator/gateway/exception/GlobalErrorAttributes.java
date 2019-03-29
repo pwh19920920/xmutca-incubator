@@ -52,10 +52,10 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
             return result;
         }
 
-        return putAttr2Result(result, error);
+        return putAttr2Result(result);
     }
 
-    private Map<String, Object> putAttr2Result(Map<String, Object> result, Throwable error) {
+    private Map<String, Object> putAttr2Result(Map<String, Object> result) {
         return putAttr2Result(result, 500, "sorry, unknown error has occurred!");
     }
 

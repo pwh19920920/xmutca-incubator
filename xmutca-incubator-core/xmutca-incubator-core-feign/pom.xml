@@ -33,5 +33,10 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-core-logger</artifactId>
+		</dependency>
 	</dependencies>
 </project>

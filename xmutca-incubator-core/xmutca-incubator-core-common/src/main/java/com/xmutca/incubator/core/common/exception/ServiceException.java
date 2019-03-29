@@ -6,7 +6,7 @@ package com.xmutca.incubator.core.common.exception;
  */
 public class ServiceException extends BaseException {
 
-    private Integer status = 400;
+    public static final Integer STATUS = 400;
 
     public ServiceException(String message) {
         super(message);
@@ -14,6 +14,6 @@ public class ServiceException extends BaseException {
 
     @Override
     public Integer getStatus() {
-        return status;
+        return STATUS;
     }
 }
