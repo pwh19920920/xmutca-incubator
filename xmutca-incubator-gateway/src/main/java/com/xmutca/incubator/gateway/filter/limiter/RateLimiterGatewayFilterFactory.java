@@ -1,7 +1,6 @@
 package com.xmutca.incubator.gateway.filter.limiter;
 
-import com.alibaba.fastjson.JSON;
-import com.xmutca.incubator.core.common.response.Receipt;
+import com.xmutca.incubator.gateway.util.ResultUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,10 +11,9 @@ import org.springframework.cloud.gateway.filter.ratelimit.RateLimiter;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.HttpStatusHolder;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
-import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import reactor.core.publisher.Flux;
 
 import java.util.Map;
 
@@ -30,7 +28,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.s
 @Getter
 @Setter
 @ConfigurationProperties("spring.cloud.gateway.filter.request-rate-limiter")
-public class RateLimiterGatewayFilterFactory extends RequestRateLimiterGatewayFilterFactory {
+public class RateLimiterGatewayFilterFactory extends RequestRateLimiterGatewayFilterFactory implements Ordered {
 
     private final RateLimiter defaultRateLimiter;
 
@@ -81,10 +79,7 @@ public class RateLimiterGatewayFilterFactory extends RequestRateLimiterGatewayFi
                         return chain.filter(exchange);
                     }
 
-                    Receipt resp = new Receipt(config.getStatusCode().value(), "request to many, please wait for a moment!");
-                    DataBuffer data = originResponse.bufferFactory().wrap(JSON.toJSONBytes(resp));
-                    setResponseStatus(exchange, config.getStatusCode());
-                    return originResponse.writeWith(Flux.just(data));
+                    return ResultUtils.build429Result(exchange, config.getStatusCode());
                 });
             });
         };
@@ -93,5 +88,10 @@ public class RateLimiterGatewayFilterFactory extends RequestRateLimiterGatewayFi
 
     private <T> T getOrDefaultValue(T configValue, T defaultValue) {
         return (configValue != null) ? configValue : defaultValue;
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
     }
 }

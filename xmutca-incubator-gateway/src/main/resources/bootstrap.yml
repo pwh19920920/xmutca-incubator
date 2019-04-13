@@ -10,14 +10,39 @@ spring:
         file-extension: yml
     gateway:
       routes:
-        - id: xmutca-incubator-example-consumer
+        - id: xmutca-incubator-example-consumer-consumer
           # lb代表从注册中心获取服务，且已负载均衡方式转发
           uri: lb://xmutca-incubator-example-consumer
           predicates:
-            - Path=/consumer/**
+            - Path=/consumer/consumer, /hello/consumer
+            - Header=X-Request-Id, xmutca-incubator-example-consumer-consumer
+            - Method=GET
+          filters:
+            - StripPrefix=1
+            # - RewritePath=/consumer/(?<remaining>.*), /$\{remaining}
+
+        - id: xmutca-incubator-example-consumer-test-id
+          # lb代表从注册中心获取服务，且已负载均衡方式转发
+          uri: lb://xmutca-incubator-example-consumer
+          predicates:
+            - Path=/consumer/test/{segment}
+            - Method=GET
+           # - Header=X-Request-Id, xmutca-incubator-example-consumer-Id
+          filters:
+            - StripPrefix=1
+            # - RewritePath=/consumer/(?<remaining>.*), /$\{remaining}
+
+        - id: xmutca-incubator-example-consumer-test
+          # lb代表从注册中心获取服务，且已负载均衡方式转发
+          uri: lb://xmutca-incubator-example-consumer
+          predicates:
+            - Path=/consumer/test
+            - Header=X-Request-Id, xmutca-incubator-example-consumer-test
+            - Method=GET
           filters:
             - StripPrefix=1
             - RewritePath=/consumer/(?<remaining>.*), /$\{remaining}
+
         - id: xmutca-incubator-example-provider
           uri: lb://xmutca-incubator-example-provider
           predicates:
@@ -51,6 +76,7 @@ spring:
             methods: GET, DELETE, PUT #只有幂等的才允许重试
       loadbalancer:
         use404: true # 意思是如果服务不存在，默认返回的是503，此功能开关代表返回的是404
+
 
 # hystrix 信号量隔离，3秒后自动超时
 hystrix:

@@ -5,6 +5,7 @@ import com.xmutca.incubator.core.common.response.Receipt;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,9 +22,21 @@ public class TestController {
     @NonNull
     private ProviderFeign providerFeign;
 
-    @RequestMapping("/consumer")
+    @RequestMapping("/test")
     public Receipt test() {
-        log.info("consumer request");
+        log.info("consumer test request");
         return providerFeign.provider();
+    }
+
+    @RequestMapping("/consumer")
+    public Receipt consumer() {
+        log.info("consumer consumer request");
+        return providerFeign.provider();
+    }
+
+    @RequestMapping("/test/{id}")
+    public Receipt testId(@PathVariable String id) {
+        log.info("consumer test request:{}", id);
+        return new Receipt(id);
     }
 }

@@ -35,6 +35,7 @@
 		<module>xmutca-incubator-core</module>
 		<module>xmutca-incubator-starters</module>
 		<module>xmutca-incubator-monitor</module>
+		<module>xmutca-incubator-auth</module>
 	</modules>
 
 	<!-- 管理依赖版本号,子项目不会默认依赖 -->
