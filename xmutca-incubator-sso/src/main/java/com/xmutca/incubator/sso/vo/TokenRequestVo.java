@@ -1,6 +1,6 @@
 package com.xmutca.incubator.sso.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,21 +38,21 @@ public class TokenRequestVo {
      */
     @NotBlank(message = "授权类型不能为空")
     @Pattern(regexp = "(password|authorization_code|refresh_token|client_credentials)", message = "授权类型仅支持password, authorization_code, refresh_token, client_credentials")
-    @JsonProperty("grant_type")
+    @JSONField(name = "grant_type")
     private String grantType;
 
     /**
      * 客户端id
      */
     @NotBlank(message = "客户端id不能为空")
-    @JsonProperty("client_id")
+    @JSONField(name = "client_id")
     private String clientId;
 
     /**
      * 密钥
      */
     @NotBlank(message = "密钥不能为空")
-    @JsonProperty("client_secret")
+    @JSONField(name = "client_secret")
     private String clientSecret;
 
     /**
@@ -77,7 +77,7 @@ public class TokenRequestVo {
      * 刷新后旧的access_token不可用
      */
     @NotBlank(message = "刷新令牌不能为空", groups = {GrantTypeRefreshToken.class})
-    @JsonProperty("refresh_token")
+    @JSONField(name = "refresh_token")
     private String refreshToken;
 
     /**

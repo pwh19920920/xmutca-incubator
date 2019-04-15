@@ -12,11 +12,6 @@ management:
     health:
       show-details: always
 
-feign:
-  hystrix:
-    enabled: true
-
-
 logging:
   file: logs/${spring.application.name}-log
   level:
@@ -30,8 +25,11 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://localhost:3306/sso?useUnicode=true&characterEncoding=utf8mb4
+    url: jdbc:mysql://localhost:3306/sso?useUnicode=true&characterEncoding=utf8
     driver-class-name: com.mysql.jdbc.Driver
 
-mybatis-plus:
-  mapper-locations: classpath:/mapper/**/**.xml
+mybatis:
+  mapper-locations: classpath:mapper/*/**.xml
+
+pagehelper:
+  helperDialect: mysql

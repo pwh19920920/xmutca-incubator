@@ -4,7 +4,6 @@ import com.xmutca.incubator.core.common.exception.ServiceException;
 import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
 import com.xmutca.incubator.sso.model.ClientInfo;
-import com.xmutca.incubator.sso.repository.ClientInfoRepository;
 import com.xmutca.incubator.sso.service.ClientInfoService;
 import com.xmutca.incubator.sso.vo.AuthorizeRequestVo;
 import com.xmutca.incubator.sso.vo.TokenRequestVo;
@@ -40,9 +39,6 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/oauth")
 @RequiredArgsConstructor
 public class OauthController {
-
-    @NonNull
-    private ClientInfoRepository clientInfoRepository;
 
     @NonNull
     private SmartValidator validator;
@@ -137,7 +133,7 @@ public class OauthController {
                 boolean locked = tryGetDistributedLock("lock", lockVal, 10, TimeUnit.SECONDS);
                 if (locked && StringUtils.isBlank(getSecret(requestVo.getClientId()))) {
                     // select from db
-                    List<ClientInfo> clientInfoList = clientInfoService.selectAll();
+                    List<ClientInfo> clientInfoList = clientInfoService.findAll();
                     clientInfoList.parallelStream().forEach(clientInfo -> {
                         redisTemplate.opsForValue().set(getClientKey(clientInfo.getClientId()), clientInfo.getSecret());
                     });

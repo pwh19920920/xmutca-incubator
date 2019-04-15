@@ -20,7 +20,8 @@
 		<logstash-logback-encoder.verison>5.3</logstash-logback-encoder.verison>
 		<org.apache.skywalking.version>6.0.0-GA</org.apache.skywalking.version>
 		<spring-boot-admin.version>2.1.3</spring-boot-admin.version>
-		<mybatis-plus.version>3.1.0</mybatis-plus.version>
+        <pagehelper-spring-boot-starter.version>1.2.8</pagehelper-spring-boot-starter.version>
+        <mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
 
 		<xmutca-incubator-core-common.version>0.0.1-SNAPSHOT</xmutca-incubator-core-common.version>
 		<xmutca-incubator-core-web.version>0.0.1-SNAPSHOT</xmutca-incubator-core-web.version>
@@ -103,18 +104,18 @@
 				<version>${spring-boot-admin.version}</version>
 			</dependency>
 
-			<!-- db -->
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus-boot-starter</artifactId>
-				<version>${mybatis-plus.version}</version>
-			</dependency>
+			<!-- mybatis -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter.version}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus-annotation</artifactId>
-				<version>${mybatis-plus.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper-spring-boot-starter.version}</version>
+            </dependency>
 
 			<dependency>
 				<groupId>com.xmutca</groupId>

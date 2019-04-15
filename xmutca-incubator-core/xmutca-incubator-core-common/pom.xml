@@ -28,10 +28,5 @@
 			<groupId>com.netflix.hystrix</groupId>
 			<artifactId>hystrix-core</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>com.baomidou</groupId>
-			<artifactId>mybatis-plus-annotation</artifactId>
-		</dependency>
 	</dependencies>
 </project>

@@ -24,7 +24,7 @@ public class ClientInfoService {
      * 查询全部
      * @return
      */
-    public List<ClientInfo> selectAll() {
-        return clientInfoRepository.selectList(null);
+    public List<ClientInfo> findAll() {
+        return clientInfoRepository.findAll();
     }
 }

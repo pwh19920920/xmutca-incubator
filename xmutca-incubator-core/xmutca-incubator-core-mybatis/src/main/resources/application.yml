@@ -1,0 +1,7 @@
+mybatis:
+  configuration:
+    default-enum-type-handler: com.xmutca.incubator.core.mybatis.CommonEnumHandler
+
+pagehelper:
+  rowBoundsWithCount: true
+  offsetAsPageNum: true

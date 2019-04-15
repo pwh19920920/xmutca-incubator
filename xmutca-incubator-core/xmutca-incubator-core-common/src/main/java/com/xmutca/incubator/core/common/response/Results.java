@@ -1,6 +1,5 @@
 package com.xmutca.incubator.core.common.response;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +18,7 @@ public class Results<T> extends Result<Collection<T>> {
     /**
      * 分页对象
      */
-    private BasePaging paging;
+    private BasePaging basePaging;
 
     public Results(Integer status, String message, Collection<T> data) {
         super(status, message, data);

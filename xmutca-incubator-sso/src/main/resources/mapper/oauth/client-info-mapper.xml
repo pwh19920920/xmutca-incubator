@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xmutca.incubator.sso.repository.ClientInfoRepository">
+    <resultMap id="resultMap" type="com.xmutca.incubator.sso.model.ClientInfo">
+        <result column="client_id" property="clientId"/>
+        <result column="secret" property="secret"/>
+    </resultMap>
+
+    <sql id="columns">
+         client_id, secret
+    </sql>
+
+    <select id="findAll" resultMap="resultMap">
+        select <include refid="columns"/>
+        from oauth_client_info
+    </select>
+</mapper>
