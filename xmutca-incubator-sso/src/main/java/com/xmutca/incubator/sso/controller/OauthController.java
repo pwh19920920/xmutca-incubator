@@ -10,8 +10,9 @@ import com.xmutca.incubator.sso.vo.TokenRequestVo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -130,7 +130,7 @@ public class OauthController {
         if (StringUtils.isBlank(getSecret(requestVo.getClientId()))) {
             String lockVal = UUID.randomUUID().toString();
             try {
-                boolean locked = tryGetDistributedLock("lock", lockVal, 10, TimeUnit.SECONDS);
+                boolean locked = tryGetDistributedLock("lock", lockVal, 10, TimeUnit.DAYS);
                 if (locked && StringUtils.isBlank(getSecret(requestVo.getClientId()))) {
                     // select from db
                     List<ClientInfo> clientInfoList = clientInfoService.findAll();
@@ -215,8 +215,9 @@ public class OauthController {
      */
     public boolean releaseDistributedLock(String key, String val) {
         String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-        RedisScript redisScript = RedisScript.of(script);
-        Object result = redisTemplate.execute(redisScript, Collections.singletonList(key), Collections.singletonList(val));
+        Object result = redisTemplate.execute((RedisConnection connection) -> connection.eval(
+            script.getBytes(), ReturnType.INTEGER, 1, key.getBytes(), val.getBytes()
+        ));
         return "1L".equals(result);
     }
 
