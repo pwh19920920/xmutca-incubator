@@ -1,4 +1,4 @@
-package com.xmutca.incubator.gateway.core;
+package com.xmutca.incubator.gateway.model.core;
 
 import java.util.HashMap;
 import java.util.Map;

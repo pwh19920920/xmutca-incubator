@@ -9,9 +9,10 @@
 		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.xmutca</groupId>
-	<artifactId>xmutca-incubator-gateway</artifactId>
+	<artifactId>xmutca-incubator-archetype</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>xmutca-incubator-gateway</name>
+	<name>xmutca-incubator-archetype</name>
+	<packaging>pom</packaging>
 
 	<dependencies>
 		<dependency>
@@ -36,23 +37,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-gateway</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-gateway-webflux</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 		</dependency>
 
 		<dependency>
@@ -72,34 +58,12 @@
 
 		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-core-logger</artifactId>
+			<artifactId>xmutca-incubator-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-core-webflux</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
+			<artifactId>xmutca-incubator-starter-feign</artifactId>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-							<goal>build-info</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 </project>

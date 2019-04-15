@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -118,8 +119,8 @@ public class DefaultExceptionHandler {
      * @return
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = BindException.class)
-    public Result handleBindException(BindException ex) {
+    @ExceptionHandler(value = WebExchangeBindException.class)
+    public Result handleBindException(WebExchangeBindException ex) {
         return handleBaseBindAndMethodArgumentNotValidMessage(ex.getAllErrors());
     }
 

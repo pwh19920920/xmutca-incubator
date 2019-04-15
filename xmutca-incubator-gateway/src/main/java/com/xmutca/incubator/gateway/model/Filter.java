@@ -1,6 +1,6 @@
 package com.xmutca.incubator.gateway.model;
 
-import com.xmutca.incubator.gateway.core.FilterType;
+import com.xmutca.incubator.gateway.model.core.FilterType;
 import lombok.Getter;
 import lombok.Setter;
 

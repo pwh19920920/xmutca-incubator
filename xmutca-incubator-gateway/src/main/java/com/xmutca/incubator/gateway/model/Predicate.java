@@ -1,6 +1,6 @@
 package com.xmutca.incubator.gateway.model;
 
-import com.xmutca.incubator.gateway.core.PredicateType;
+import com.xmutca.incubator.gateway.model.core.PredicateType;
 import lombok.Getter;
 import lombok.Setter;
 

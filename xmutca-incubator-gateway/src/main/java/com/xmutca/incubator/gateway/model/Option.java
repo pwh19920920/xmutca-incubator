@@ -2,8 +2,8 @@ package com.xmutca.incubator.gateway.model;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.xmutca.incubator.gateway.core.BaseRouteType;
-import com.xmutca.incubator.gateway.core.RouteArgsType;
+import com.xmutca.incubator.gateway.model.core.BaseRouteType;
+import com.xmutca.incubator.gateway.model.core.RouteArgsType;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.cloud.gateway.support.NameUtils;

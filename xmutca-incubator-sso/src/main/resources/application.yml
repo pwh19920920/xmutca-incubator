@@ -1,0 +1,37 @@
+server:
+  port: 8989
+
+
+# 暴露端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+feign:
+  hystrix:
+    enabled: true
+
+
+logging:
+  file: logs/${spring.application.name}-log
+  level:
+    com.xmutca: info
+
+spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:8686
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/sso?useUnicode=true&characterEncoding=utf8mb4
+    driver-class-name: com.mysql.jdbc.Driver
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/**.xml

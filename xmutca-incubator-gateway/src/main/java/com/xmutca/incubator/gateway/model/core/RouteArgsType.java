@@ -1,4 +1,4 @@
-package com.xmutca.incubator.gateway.core;
+package com.xmutca.incubator.gateway.model.core;
 
 /**
  * @version Revision: 0.0.1

@@ -1,4 +1,4 @@
-package com.xmutca.incubator.gateway.core;
+package com.xmutca.incubator.gateway.model.core;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;

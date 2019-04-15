@@ -9,31 +9,24 @@
 		<relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.xmutca</groupId>
-	<artifactId>xmutca-incubator-example-provider</artifactId>
+	<artifactId>xmutca-incubator-core-mybatis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>xmutca-incubator-example-provider</name>
+	<name>xmutca-incubator-core-mybatis</name>
 
 	<dependencies>
 		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-archetype</artifactId>
+			<artifactId>xmutca-incubator-core-common</artifactId>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-							<goal>build-info</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 </project>

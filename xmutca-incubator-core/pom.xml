@@ -15,5 +15,6 @@
 		<module>xmutca-incubator-core-webflux</module>
 		<module>xmutca-incubator-core-feign</module>
 		<module>xmutca-incubator-core-logger</module>
+		<module>xmutca-incubator-core-mybatis</module>
 	</modules>
 </project>
