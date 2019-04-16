@@ -16,5 +16,6 @@
 		<module>xmutca-incubator-core-feign</module>
 		<module>xmutca-incubator-core-logger</module>
 		<module>xmutca-incubator-core-mybatis</module>
+		<module>xmutca-incubator-core-xxl-job</module>
 	</modules>
 </project>

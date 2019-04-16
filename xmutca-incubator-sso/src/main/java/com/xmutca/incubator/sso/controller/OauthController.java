@@ -130,7 +130,7 @@ public class OauthController {
         if (StringUtils.isBlank(getSecret(requestVo.getClientId()))) {
             String lockVal = UUID.randomUUID().toString();
             try {
-                boolean locked = tryGetDistributedLock("lock", lockVal, 10, TimeUnit.DAYS);
+                boolean locked = tryGetDistributedLock("lock", lockVal, 10, TimeUnit.SECONDS);
                 if (locked && StringUtils.isBlank(getSecret(requestVo.getClientId()))) {
                     // select from db
                     List<ClientInfo> clientInfoList = clientInfoService.findAll();
@@ -201,7 +201,12 @@ public class OauthController {
      */
     public boolean tryGetDistributedLock(String key, String val, long timeout, TimeUnit unit) {
          try {
-             return redisTemplate.opsForValue().setIfAbsent(key, val, timeout, unit);
+             boolean result = redisTemplate.opsForValue().setIfAbsent(key, val, timeout, unit);
+             if (!result) {
+                 wait(10000);
+                 return tryGetDistributedLock(key, val, timeout, unit);
+             }
+             return true;
          } catch (Exception ex) {
              return false;
          }
