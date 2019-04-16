@@ -42,4 +42,35 @@ public class TokenResponseDto {
      */
     @JSONField(name = "refresh_expires_in")
     private long refreshExpiresIn;
+
+    /**
+     * 错误
+     */
+    private String error;
+
+    /**
+     * 错误描述
+     */
+    @JSONField(name = "error_description")
+    private String errorDescription;
+
+    public TokenResponseDto(String error, String errorDescription) {
+        this.error = error;
+        this.errorDescription = errorDescription;
+    }
+
+    public TokenResponseDto(String tokenType, String accessToken, long expiresIn, String refreshToken, long refreshExpiresIn) {
+        this.tokenType = tokenType;
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
+        this.refreshExpiresIn = refreshExpiresIn;
+        this.refreshToken = refreshToken;
+    }
+
+    public TokenResponseDto(String tokenType, String accessToken, long expiresIn, long refreshExpiresIn) {
+        this.tokenType = tokenType;
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
+        this.refreshExpiresIn = refreshExpiresIn;
+    }
 }

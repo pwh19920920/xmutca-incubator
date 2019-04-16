@@ -5,14 +5,15 @@
     <resultMap id="resultMap" type="com.xmutca.incubator.sso.model.ClientInfo">
         <result column="client_id" property="clientId"/>
         <result column="secret" property="secret"/>
+        <result column="grant_types" property="grantTypes" typeHandler="com.xmutca.incubator.core.mybatis.handler.StringToListTypeHandler"/>
     </resultMap>
 
     <sql id="columns">
-         client_id, secret
+         client_id, secret, grant_types
     </sql>
 
     <select id="findAll" resultMap="resultMap">
         select <include refid="columns"/>
-        from oauth_client_info
+        from sys_client_info
     </select>
 </mapper>

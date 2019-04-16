@@ -44,6 +44,10 @@ public class Result<T> {
         this(DEFAULT_STATUS, message, null);
     }
 
+    public Result(T data) {
+        this(DEFAULT_STATUS, null, data);
+    }
+
     public Result() {
         this(DEFAULT_STATUS, null, null);
     }

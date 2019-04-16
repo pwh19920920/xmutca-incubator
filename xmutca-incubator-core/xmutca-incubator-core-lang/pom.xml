@@ -9,29 +9,14 @@
 		<relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.xmutca</groupId>
-	<artifactId>xmutca-incubator-core-mybatis</artifactId>
+	<artifactId>xmutca-incubator-core-lang</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>xmutca-incubator-core-mybatis</name>
+	<name>xmutca-incubator-core-lang</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-core-common</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.pagehelper</groupId>
-			<artifactId>pagehelper-spring-boot-starter</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
 		</dependency>
 	</dependencies>
 </project>

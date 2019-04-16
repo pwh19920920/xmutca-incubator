@@ -1,6 +1,6 @@
 mybatis:
   configuration:
-    default-enum-type-handler: com.xmutca.incubator.core.mybatis.CommonEnumHandler
+    default-enum-type-handler: com.xmutca.incubator.core.mybatis.handler.CommonEnumHandler
 
 pagehelper:
   rowBoundsWithCount: true
