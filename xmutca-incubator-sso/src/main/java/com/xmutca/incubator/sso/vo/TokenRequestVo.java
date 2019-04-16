@@ -80,11 +80,4 @@ public class TokenRequestVo {
     @JSONField(name = "refresh_token")
     private String refreshToken;
 
-    /**
-     * 获取key
-     * @return
-     */
-    public String getClientKey() {
-        return String.format("%s:%s", getClientId(), getClientSecret());
-    }
 }
