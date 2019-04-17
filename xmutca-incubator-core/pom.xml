@@ -18,5 +18,6 @@
 		<module>xmutca-incubator-core-mybatis</module>
 		<module>xmutca-incubator-core-xxl-job</module>
 		<module>xmutca-incubator-core-lang</module>
+		<module>xmutca-incubator-core-sequence</module>
 	</modules>
 </project>

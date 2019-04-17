@@ -1,6 +1,6 @@
 package com.xmutca.incubator.sso.repository;
 
-import com.xmutca.incubator.sso.model.ClientInfo;
+import com.xmutca.incubator.sso.model.OauthClientInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,11 +11,11 @@ import java.util.List;
  * @Date: 2019-04-15
  */
 @Mapper
-public interface ClientInfoRepository {
+public interface OauthClientInfoRepository {
 
     /**
      * 查询全部
      * @return
      */
-    List<ClientInfo> findAll();
+    List<OauthClientInfo> findAll();
 }

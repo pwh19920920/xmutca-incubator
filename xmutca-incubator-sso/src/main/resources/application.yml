@@ -17,6 +17,15 @@ logging:
   level:
     com.xmutca: info
 
+system:
+  sso:
+    access_token_expire_timeout: 3600
+    refresh_token_expire_timeout: 2592000
+  generator:
+    type: snowflake
+    snowflake:
+      worker_id: 0
+      data_centerId: 0
 
 spring:
   boot:
@@ -34,4 +43,4 @@ mybatis:
 
 pagehelper:
   helperDialect: mysql
-debug: true
+

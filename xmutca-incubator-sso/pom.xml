@@ -25,6 +25,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-starter-sequence</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
@@ -42,12 +47,6 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.oltu.oauth2</groupId>
-			<artifactId>org.apache.oltu.oauth2.common</artifactId>
-			<version>1.0.2</version>
 		</dependency>
 	</dependencies>
 

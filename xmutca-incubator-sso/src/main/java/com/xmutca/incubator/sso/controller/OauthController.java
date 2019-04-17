@@ -3,11 +3,12 @@ package com.xmutca.incubator.sso.controller;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson.JSON;
 import com.xmutca.incubator.core.common.response.Receipt;
+import com.xmutca.incubator.core.common.response.Result;
 import com.xmutca.incubator.sso.dto.TokenResponseDto;
-import com.xmutca.incubator.sso.model.ClientInfo;
-import com.xmutca.incubator.sso.model.UserInfo;
-import com.xmutca.incubator.sso.service.ClientInfoService;
-import com.xmutca.incubator.sso.service.UserInfoService;
+import com.xmutca.incubator.sso.model.OauthClientInfo;
+import com.xmutca.incubator.sso.model.SysUserInfo;
+import com.xmutca.incubator.sso.service.OauthClientInfoService;
+import com.xmutca.incubator.sso.service.SysUserInfoService;
 import com.xmutca.incubator.sso.vo.AuthorizeRequestVo;
 import com.xmutca.incubator.sso.vo.TokenRequestVo;
 import io.jsonwebtoken.*;
@@ -46,48 +47,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class OauthController {
 
-    public enum OauthErrorResp {
-        INVALID_REQUEST(HttpStatus.BAD_REQUEST,"invalid_request", "非法请求"),
-        INVALID_GRANT(HttpStatus.BAD_REQUEST,"invalid_grant", "非法授权"),
-        UNSUPPORTED_GRANT_TYPE(HttpStatus.BAD_REQUEST,"unsupported_grant_type", "不支持的授权类型"),
-        EXPIRED_TOKEN(HttpStatus.BAD_REQUEST,"expired_token", "令牌过期"),
-        INVALID_TOKEN(HttpStatus.BAD_REQUEST,"invalid_token", "非法令牌"),
-        INVALID_USERNAME(HttpStatus.BAD_REQUEST,"invalid_user", "用户名或者密码错误"),
-        INVALID_CLIENT(HttpStatus.UNAUTHORIZED,"invalid_client", "非法客户端或者令牌");
-
-        HttpStatus status;
-
-        private String code;
-
-        private String msg;
-
-        OauthErrorResp(HttpStatus status, String code, String msg) {
-            this.status = status;
-            this.code = code;
-            this.msg = msg;
-        }
-
-        public HttpStatus getStatus() {
-            return status;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
-
-        public ResponseEntity getResp() {
-            return new ResponseEntity(new TokenResponseDto(this.code, this.msg), HttpStatus.valueOf(this.status.value()));
-        }
-
-        public ResponseEntity getResp(String msg) {
-            return new ResponseEntity(new TokenResponseDto(this.code, msg), HttpStatus.valueOf(this.status.value()));
-        }
-    }
-
     public static final String PARAM_JTI = "jti";
 
     @NonNull
@@ -97,10 +56,10 @@ public class OauthController {
     private StringRedisTemplate redisTemplate;
 
     @NonNull
-    private ClientInfoService clientInfoService;
+    private OauthClientInfoService oauthClientInfoService;
 
     @NonNull
-    private UserInfoService userInfoService;
+    private SysUserInfoService sysUserInfoService;
 
     /**
      * 令牌服务
@@ -111,16 +70,16 @@ public class OauthController {
     @PostMapping(value = "/token")
     public Object token(@Validated @RequestBody TokenRequestVo requestVo) {
         // 检查client/secret是否存在且正确
-        ClientInfo clientInfo = getClientInfo(requestVo);
-        if (null == clientInfo) {
+        OauthClientInfo oauthClientInfo = getClientInfo(requestVo);
+        if (null == oauthClientInfo) {
             return OauthErrorResp.INVALID_CLIENT.getResp();
         }
 
-        if (!requestVo.getClientSecret().equals(clientInfo.getSecret())) {
+        if (!requestVo.getClientSecret().equals(oauthClientInfo.getSecret())) {
             return OauthErrorResp.INVALID_CLIENT.getResp();
         }
 
-        if (!clientInfo.getGrantTypes().contains(requestVo.getGrantType())) {
+        if (!oauthClientInfo.getGrantTypes().contains(requestVo.getGrantType())) {
             return OauthErrorResp.UNSUPPORTED_GRANT_TYPE.getResp();
         }
 
@@ -154,13 +113,13 @@ public class OauthController {
      */
     public Object tokenForPassword(TokenRequestVo requestVo) {
         // 检查账号
-        UserInfo userInfo = userInfoService.getByUsername(requestVo.getUsername());
-        if (null == userInfo) {
+        SysUserInfo sysUserInfo = sysUserInfoService.getByUsername(requestVo.getUsername());
+        if (null == sysUserInfo) {
             return OauthErrorResp.INVALID_USERNAME.getResp();
         }
 
         // 验证密码
-        if (!DigestUtil.md5Hex(requestVo.getPassword() + userInfo.getSalt()).equals(userInfo.getPassword())) {
+        if (!DigestUtil.md5Hex(requestVo.getPassword() + sysUserInfo.getSalt()).equals(sysUserInfo.getPassword())) {
             return OauthErrorResp.INVALID_USERNAME.getResp();
         }
 
@@ -170,15 +129,17 @@ public class OauthController {
         String refreshTokenId = UUID.randomUUID().toString();
         String refreshTokenSecret = UUID.randomUUID().toString();
 
-        redisTemplate.boundSetOps(String.format("user_secret:%s", userInfo.getId())).add(refreshTokenId);
+
+
+        redisTemplate.boundSetOps(String.format("user_secret:%s", sysUserInfo.getId())).add(refreshTokenId);
         redisTemplate.boundValueOps(String.format("user_ticket:%s", accessTokenId)).set(accessTokenSecret, 3600, TimeUnit.SECONDS);
         redisTemplate.boundValueOps(String.format("user_refresh:%s", refreshTokenId)).set(accessTokenId, 3600 * 24 * 30, TimeUnit.SECONDS);
         redisTemplate.boundValueOps(String.format("user_ticket:%s", refreshTokenId)).set(refreshTokenSecret, 3600 * 24 * 30, TimeUnit.SECONDS);
 
         LocalDateTime localDateTime = LocalDateTime.now();
-        String accessToken = getToken(accessTokenId, userInfo.getId().toString(), accessTokenSecret, localDateTime, 3600);
-        String refreshToken = getToken(refreshTokenId, userInfo.getId().toString(), refreshTokenSecret, localDateTime, 3600 * 24 * 30);
-        return new TokenResponseDto("bearer", accessToken, 3600, refreshToken, 3600 * 24 * 30);
+        String accessToken = getToken(accessTokenId, sysUserInfo.getId().toString(), accessTokenSecret, localDateTime, 3600);
+        String refreshToken = getToken(refreshTokenId, sysUserInfo.getId().toString(), refreshTokenSecret, localDateTime, 3600 * 24 * 30);
+        return new Result<>(new TokenResponseDto("bearer", accessToken, 3600, refreshToken, 3600 * 24 * 30));
     }
 
     /**
@@ -253,7 +214,7 @@ public class OauthController {
      * @param subject
      * @return
      */
-    private TokenResponseDto refreshToken(String refreshTokenId, String subject) {
+    private Object refreshToken(String refreshTokenId, String subject) {
         // 删除旧令牌
         String oldAccessTokenId = redisTemplate.boundValueOps(String.format("user_refresh:%s", refreshTokenId)).get();
         redisTemplate.opsForValue().getOperations().delete(String.format("user_ticket:%s", oldAccessTokenId));
@@ -262,13 +223,13 @@ public class OauthController {
         String accessTokenId = UUID.randomUUID().toString();
         String accessTokenSecret = UUID.randomUUID().toString();
         redisTemplate.boundValueOps(String.format("user_ticket:%s", accessTokenId)).set(accessTokenSecret, 3600, TimeUnit.SECONDS);
-        redisTemplate.boundValueOps(String.format("user_refresh:%s", refreshTokenId)).set(accessTokenId);
         Long refreshExpiresIn = redisTemplate.boundValueOps(String.format("user_refresh:%s", refreshTokenId)).getExpire();
+        redisTemplate.boundValueOps(String.format("user_refresh:%s", refreshTokenId)).set(accessTokenId, refreshExpiresIn, TimeUnit.SECONDS);
 
         // 返回令牌
         LocalDateTime localDateTime = LocalDateTime.now();
         String accessToken = getToken(accessTokenId, subject, accessTokenSecret, localDateTime, 3600);
-        return new TokenResponseDto("bearer", accessToken, 3600, refreshExpiresIn);
+        return new Result<>(new TokenResponseDto("bearer", accessToken, 3600, refreshExpiresIn));
     }
 
     /**
@@ -287,15 +248,15 @@ public class OauthController {
      * @param requestVo
      * @return
      */
-    private ClientInfo getClientInfo(TokenRequestVo requestVo) {
+    private OauthClientInfo getClientInfo(TokenRequestVo requestVo) {
         if (StringUtils.isBlank(getSecret(requestVo.getClientId()))) {
             String lockVal = UUID.randomUUID().toString();
             try {
                 boolean locked = tryGetDistributedLock("lock", lockVal, 10, TimeUnit.SECONDS);
                 if (locked && StringUtils.isBlank(getSecret(requestVo.getClientId()))) {
                     // select from db
-                    List<ClientInfo> clientInfoList = clientInfoService.findAll();
-                    clientInfoList.parallelStream().forEach(clientInfo -> redisTemplate.opsForValue().set(getClientKey(clientInfo.getClientId()), JSON.toJSONString(clientInfo)));
+                    List<OauthClientInfo> oauthClientInfoList = oauthClientInfoService.findAll();
+                    oauthClientInfoList.parallelStream().forEach(oauthClientInfo -> redisTemplate.opsForValue().set(getClientKey(oauthClientInfo.getClientId()), JSON.toJSONString(oauthClientInfo)));
                 }
             } finally {
                 releaseDistributedLock("lock", lockVal);
@@ -307,7 +268,7 @@ public class OauthController {
             return null;
         }
 
-        return JSON.parseObject(data, ClientInfo.class);
+        return JSON.parseObject(data, OauthClientInfo.class);
     }
 
     /**
@@ -403,5 +364,38 @@ public class OauthController {
     public Receipt logout() {
         // 获取令牌
         return null;
+    }
+
+    /**
+     * @author pwh
+     */
+    public enum OauthErrorResp {
+        INVALID_REQUEST(HttpStatus.BAD_REQUEST,"invalid_request", "非法请求"),
+        INVALID_GRANT(HttpStatus.BAD_REQUEST,"invalid_grant", "非法授权"),
+        UNSUPPORTED_GRANT_TYPE(HttpStatus.BAD_REQUEST,"unsupported_grant_type", "不支持的授权类型"),
+        EXPIRED_TOKEN(HttpStatus.BAD_REQUEST,"expired_token", "令牌过期"),
+        INVALID_TOKEN(HttpStatus.BAD_REQUEST,"invalid_token", "非法令牌"),
+        INVALID_USERNAME(HttpStatus.BAD_REQUEST,"invalid_user", "用户名或者密码错误"),
+        INVALID_CLIENT(HttpStatus.UNAUTHORIZED,"invalid_client", "非法客户端或者令牌");
+
+        HttpStatus status;
+
+        private String code;
+
+        private String msg;
+
+        OauthErrorResp(HttpStatus status, String code, String msg) {
+            this.status = status;
+            this.code = code;
+            this.msg = msg;
+        }
+
+        public ResponseEntity getResp() {
+            return new ResponseEntity(new Result(this.status.value(), this.msg, new TokenResponseDto(this.code, this.msg)), HttpStatus.valueOf(this.status.value()));
+        }
+
+        public ResponseEntity getResp(String msg) {
+            return new ResponseEntity(new Result<>(this.status.value(), msg, new TokenResponseDto(this.code, msg)), HttpStatus.valueOf(this.status.value()));
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.xmutca.incubator.sso.service;
 
-import com.xmutca.incubator.sso.model.ClientInfo;
-import com.xmutca.incubator.sso.repository.ClientInfoRepository;
+import com.xmutca.incubator.sso.model.OauthClientInfo;
+import com.xmutca.incubator.sso.repository.OauthClientInfoRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,16 +15,16 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class ClientInfoService {
+public class OauthClientInfoService {
 
     @NonNull
-    private ClientInfoRepository clientInfoRepository;
+    private OauthClientInfoRepository oauthClientInfoRepository;
 
     /**
      * 查询全部
      * @return
      */
-    public List<ClientInfo> findAll() {
-        return clientInfoRepository.findAll();
+    public List<OauthClientInfo> findAll() {
+        return oauthClientInfoRepository.findAll();
     }
 }

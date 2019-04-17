@@ -1,6 +1,6 @@
 package com.xmutca.incubator.sso.repository;
 
-import com.xmutca.incubator.sso.model.UserInfo;
+import com.xmutca.incubator.sso.model.SysUserInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,12 +9,12 @@ import org.apache.ibatis.annotations.Mapper;
  * @Date: 2019-04-16
  */
 @Mapper
-public interface UserInfoRepository {
+public interface SysUserInfoRepository {
 
     /**
      * 用户名获取用户
      * @param username
      * @return
      */
-    UserInfo getByUsername(String username);
+    SysUserInfo getByUsername(String username);
 }

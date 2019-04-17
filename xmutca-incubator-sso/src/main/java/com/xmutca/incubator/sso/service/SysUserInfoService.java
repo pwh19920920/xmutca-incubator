@@ -1,7 +1,7 @@
 package com.xmutca.incubator.sso.service;
 
-import com.xmutca.incubator.sso.model.UserInfo;
-import com.xmutca.incubator.sso.repository.UserInfoRepository;
+import com.xmutca.incubator.sso.model.SysUserInfo;
+import com.xmutca.incubator.sso.repository.SysUserInfoRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,17 +13,17 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class UserInfoService {
+public class SysUserInfoService {
 
     @NonNull
-    private UserInfoRepository userInfoRepository;
+    private SysUserInfoRepository sysUserInfoRepository;
 
     /**
      * 通过用户名获取用户
      * @param username
      * @return
      */
-    public UserInfo getByUsername(String username) {
-        return userInfoRepository.getByUsername(username);
+    public SysUserInfo getByUsername(String username) {
+        return sysUserInfoRepository.getByUsername(username);
     }
 }

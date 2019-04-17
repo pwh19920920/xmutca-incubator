@@ -1,8 +1,11 @@
 package com.xmutca.incubator.sso.model;
 
+import com.google.common.collect.Lists;
 import com.xmutca.incubator.core.common.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 /**
  * @version Revision: 0.0.1
@@ -11,20 +14,20 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class UserInfo extends BaseEntity {
+public class OauthClientInfo extends BaseEntity {
 
     /**
-     * 账号
+     * 客户端id
      */
-    private String username;
+    private String clientId;
 
     /**
-     * 密码
+     * 密钥
      */
-    private String password;
+    private String secret;
 
     /**
-     * 密码盐
+     * 授权类型
      */
-    private String salt;
+    private List<String> grantTypes = Lists.newArrayList();
 }
