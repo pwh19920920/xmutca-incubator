@@ -84,6 +84,11 @@
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-starter-feign</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
