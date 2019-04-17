@@ -63,7 +63,7 @@ public class OauthTokenSecret extends BaseEntity {
      * @param refreshExpireTime
      * @return
      */
-    public static OauthTokenSecret newInstance(Long userId, Date accessExpireTime, Date refreshExpireTime) {
+    public static OauthTokenSecret newInitInstance(Long userId, Date accessExpireTime, Date refreshExpireTime) {
         OauthTokenSecret tokenSecret = new OauthTokenSecret();
         tokenSecret.clientId = UUID.randomUUID().toString();
         tokenSecret.accessTokenId = UUID.randomUUID().toString();
@@ -73,6 +73,21 @@ public class OauthTokenSecret extends BaseEntity {
         tokenSecret.userId = userId;
         tokenSecret.accessExpireTime = accessExpireTime;
         tokenSecret.refreshExpireTime = refreshExpireTime;
+        return tokenSecret;
+    }
+
+    /**
+     * 赋值数据
+     * @param tokenSecret
+     * @param accessExpireTime
+     * @param refreshTokenId
+     * @return
+     */
+    public static OauthTokenSecret newUpdateInstance(OauthTokenSecret tokenSecret, Date accessExpireTime, String refreshTokenId) {
+        tokenSecret.accessTokenId = UUID.randomUUID().toString();
+        tokenSecret.accessTokenSecret = UUID.randomUUID().toString();
+        tokenSecret.refreshTokenId = refreshTokenId;
+        tokenSecret.accessExpireTime = accessExpireTime;
         return tokenSecret;
     }
 }

@@ -4,10 +4,13 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson.JSON;
 import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
+import com.xmutca.incubator.sso.config.SystemProperties;
 import com.xmutca.incubator.sso.dto.TokenResponseDto;
 import com.xmutca.incubator.sso.model.OauthClientInfo;
+import com.xmutca.incubator.sso.model.OauthTokenSecret;
 import com.xmutca.incubator.sso.model.SysUserInfo;
 import com.xmutca.incubator.sso.service.OauthClientInfoService;
+import com.xmutca.incubator.sso.service.OauthTokenSecretService;
 import com.xmutca.incubator.sso.service.SysUserInfoService;
 import com.xmutca.incubator.sso.vo.AuthorizeRequestVo;
 import com.xmutca.incubator.sso.vo.TokenRequestVo;
@@ -26,7 +29,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.SmartValidator;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -60,6 +66,12 @@ public class OauthController {
 
     @NonNull
     private SysUserInfoService sysUserInfoService;
+
+    @NonNull
+    private SystemProperties systemProperties;
+
+    @NonNull
+    private OauthTokenSecretService oauthTokenSecretService;
 
     /**
      * 令牌服务
@@ -123,41 +135,34 @@ public class OauthController {
             return OauthErrorResp.INVALID_USERNAME.getResp();
         }
 
-        // 生成accessToken，refreshToken
-        String accessTokenId = UUID.randomUUID().toString();
-        String accessTokenSecret = UUID.randomUUID().toString();
-        String refreshTokenId = UUID.randomUUID().toString();
-        String refreshTokenSecret = UUID.randomUUID().toString();
-
-
-
-        redisTemplate.boundSetOps(String.format("user_secret:%s", sysUserInfo.getId())).add(refreshTokenId);
-        redisTemplate.boundValueOps(String.format("user_ticket:%s", accessTokenId)).set(accessTokenSecret, 3600, TimeUnit.SECONDS);
-        redisTemplate.boundValueOps(String.format("user_refresh:%s", refreshTokenId)).set(accessTokenId, 3600 * 24 * 30, TimeUnit.SECONDS);
-        redisTemplate.boundValueOps(String.format("user_ticket:%s", refreshTokenId)).set(refreshTokenSecret, 3600 * 24 * 30, TimeUnit.SECONDS);
-
+        // 创建新令牌
         LocalDateTime localDateTime = LocalDateTime.now();
-        String accessToken = getToken(accessTokenId, sysUserInfo.getId().toString(), accessTokenSecret, localDateTime, 3600);
-        String refreshToken = getToken(refreshTokenId, sysUserInfo.getId().toString(), refreshTokenSecret, localDateTime, 3600 * 24 * 30);
-        return new Result<>(new TokenResponseDto("bearer", accessToken, 3600, refreshToken, 3600 * 24 * 30));
+        Date accessExpireTime = Date.from(localDateTime.plusSeconds(systemProperties.getSso().getAccessTokenExpireTimeout()).atZone(ZoneId.systemDefault()).toInstant());
+        Date refreshExpireTime = Date.from(localDateTime.plusSeconds(systemProperties.getSso().getRefreshTokenExpireTimeout()).atZone(ZoneId.systemDefault()).toInstant());
+        OauthTokenSecret tokenSecret = OauthTokenSecret.newInitInstance(sysUserInfo.getId(), accessExpireTime, refreshExpireTime);
+        oauthTokenSecretService.save(tokenSecret);
+
+        // 返回令牌
+        String accessToken = getToken(tokenSecret.getAccessTokenId(), sysUserInfo.getId().toString(), tokenSecret.getAccessTokenSecret(), localDateTime, tokenSecret.getAccessExpireTime());
+        String refreshToken = getToken(tokenSecret.getRefreshTokenId(), sysUserInfo.getId().toString(), tokenSecret.getRefreshTokenSecret(), localDateTime, tokenSecret.getRefreshExpireTime());
+        return new Result<>(new TokenResponseDto("bearer", accessToken, systemProperties.getSso().getAccessTokenExpireTimeout(), refreshToken, systemProperties.getSso().getRefreshTokenExpireTimeout()));
     }
 
     /**
      * 获取用户令牌
-     *
      * @param jti
      * @param subject
      * @param secret
      * @param localDateTime
-     * @param timeout
+     * @param expireTime
      * @return
      */
-    private String getToken(String jti, String subject, String secret, LocalDateTime localDateTime, long timeout) {
+    private String getToken(String jti, String subject, String secret, LocalDateTime localDateTime, Date expireTime) {
         return Jwts.builder()
                 .setSubject(subject)
                 .setId(jti)
                 .setIssuedAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
-                .setExpiration(Date.from(localDateTime.plusSeconds(timeout).atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(expireTime)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
@@ -191,16 +196,21 @@ public class OauthController {
         }
 
         // 判断密钥
-        String secret = redisTemplate.boundValueOps(String.format("user_ticket:%s", jti)).get();
-        if (StringUtils.isBlank(secret)) {
+        OauthTokenSecret tokenSecret = oauthTokenSecretService.getByRefreshTokenId(jti);
+        if (null == tokenSecret) {
+            return OauthErrorResp.INVALID_TOKEN.getResp();
+        }
+
+        // 判断过期
+        if (tokenSecret.getRefreshExpireTime().before(new Date())) {
             return OauthErrorResp.EXPIRED_TOKEN.getResp();
         }
 
         // 解析信息
         try {
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(requestVo.getRefreshToken());
+            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(tokenSecret.getRefreshTokenSecret()).parseClaimsJws(requestVo.getRefreshToken());
             String subject = claimsJws.getBody().getSubject();
-            return refreshToken(jti, subject);
+            return refreshToken(tokenSecret, jti, subject);
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
             return OauthErrorResp.INVALID_TOKEN.getResp();
         } catch (ExpiredJwtException expiredEx) {
@@ -210,26 +220,22 @@ public class OauthController {
 
     /**
      * 刷新令牌
+     *
+     *
+     * @param tokenSecret
      * @param refreshTokenId
      * @param subject
      * @return
      */
-    private Object refreshToken(String refreshTokenId, String subject) {
-        // 删除旧令牌
-        String oldAccessTokenId = redisTemplate.boundValueOps(String.format("user_refresh:%s", refreshTokenId)).get();
-        redisTemplate.opsForValue().getOperations().delete(String.format("user_ticket:%s", oldAccessTokenId));
-
-        // 设置新令牌
-        String accessTokenId = UUID.randomUUID().toString();
-        String accessTokenSecret = UUID.randomUUID().toString();
-        redisTemplate.boundValueOps(String.format("user_ticket:%s", accessTokenId)).set(accessTokenSecret, 3600, TimeUnit.SECONDS);
-        Long refreshExpiresIn = redisTemplate.boundValueOps(String.format("user_refresh:%s", refreshTokenId)).getExpire();
-        redisTemplate.boundValueOps(String.format("user_refresh:%s", refreshTokenId)).set(accessTokenId, refreshExpiresIn, TimeUnit.SECONDS);
-
-        // 返回令牌
+    private Object refreshToken(OauthTokenSecret tokenSecret, String refreshTokenId, String subject) {
         LocalDateTime localDateTime = LocalDateTime.now();
-        String accessToken = getToken(accessTokenId, subject, accessTokenSecret, localDateTime, 3600);
-        return new Result<>(new TokenResponseDto("bearer", accessToken, 3600, refreshExpiresIn));
+        Date accessExpireTime = Date.from(localDateTime.plusSeconds(systemProperties.getSso().getAccessTokenExpireTimeout()).atZone(ZoneId.systemDefault()).toInstant());
+        OauthTokenSecret.newUpdateInstance(tokenSecret, accessExpireTime, refreshTokenId);
+
+        // 更新并返回
+        oauthTokenSecretService.updateAccessTokenIdAndSecret(tokenSecret);
+        String accessToken = getToken(tokenSecret.getAccessTokenId(), subject, tokenSecret.getAccessTokenSecret(), localDateTime, tokenSecret.getAccessExpireTime());
+        return new Result<>(new TokenResponseDto("bearer", accessToken, systemProperties.getSso().getAccessTokenExpireTimeout(), (tokenSecret.getRefreshExpireTime().getTime() - System.currentTimeMillis())/1000));
     }
 
     /**
@@ -358,6 +364,7 @@ public class OauthController {
 
     /**
      * 退出
+     *
      * @return
      */
     @PostMapping("/logout")
@@ -370,13 +377,13 @@ public class OauthController {
      * @author pwh
      */
     public enum OauthErrorResp {
-        INVALID_REQUEST(HttpStatus.BAD_REQUEST,"invalid_request", "非法请求"),
-        INVALID_GRANT(HttpStatus.BAD_REQUEST,"invalid_grant", "非法授权"),
-        UNSUPPORTED_GRANT_TYPE(HttpStatus.BAD_REQUEST,"unsupported_grant_type", "不支持的授权类型"),
-        EXPIRED_TOKEN(HttpStatus.BAD_REQUEST,"expired_token", "令牌过期"),
-        INVALID_TOKEN(HttpStatus.BAD_REQUEST,"invalid_token", "非法令牌"),
-        INVALID_USERNAME(HttpStatus.BAD_REQUEST,"invalid_user", "用户名或者密码错误"),
-        INVALID_CLIENT(HttpStatus.UNAUTHORIZED,"invalid_client", "非法客户端或者令牌");
+        INVALID_REQUEST(HttpStatus.BAD_REQUEST, "invalid_request", "非法请求"),
+        INVALID_GRANT(HttpStatus.BAD_REQUEST, "invalid_grant", "非法授权"),
+        UNSUPPORTED_GRANT_TYPE(HttpStatus.BAD_REQUEST, "unsupported_grant_type", "不支持的授权类型"),
+        EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "expired_token", "令牌过期"),
+        INVALID_TOKEN(HttpStatus.BAD_REQUEST, "invalid_token", "非法令牌"),
+        INVALID_USERNAME(HttpStatus.BAD_REQUEST, "invalid_user", "用户名或者密码错误"),
+        INVALID_CLIENT(HttpStatus.UNAUTHORIZED, "invalid_client", "非法客户端或者令牌");
 
         HttpStatus status;
 
