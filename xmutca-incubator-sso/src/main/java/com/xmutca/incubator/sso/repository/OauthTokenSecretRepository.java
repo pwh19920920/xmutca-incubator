@@ -38,4 +38,11 @@ public interface OauthTokenSecretRepository {
      * @return
      */
     int save(OauthTokenSecret tokenSecret);
+
+    /**
+     * 更新状态
+     * @param accessTokenId
+     * @return
+     */
+    int updateStatus(String accessTokenId);
 }

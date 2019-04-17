@@ -30,11 +30,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.SmartValidator;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -56,6 +54,8 @@ public class OauthController {
 
     public static final String PARAM_JTI = "jti";
     public static final String PARAM_CLIENT = "client";
+    public static final String TOKEN_KEY = "authorization";
+    public static final String TOKEN_TYPE = "bearer";
 
     @NonNull
     private SmartValidator validator;
@@ -147,7 +147,7 @@ public class OauthController {
         // 返回令牌
         String accessToken = getToken(requestVo.getClientId(), tokenSecret.getAccessTokenId(), sysUserInfo.getId().toString(), tokenSecret.getAccessTokenSecret(), localDateTime, tokenSecret.getAccessExpireTime());
         String refreshToken = getToken(requestVo.getClientId(), tokenSecret.getRefreshTokenId(), sysUserInfo.getId().toString(), tokenSecret.getRefreshTokenSecret(), localDateTime, tokenSecret.getRefreshExpireTime());
-        return new Result<>(new TokenResponseDto("bearer", accessToken, systemProperties.getSso().getAccessTokenExpireTimeout(), refreshToken, systemProperties.getSso().getRefreshTokenExpireTimeout()));
+        return new Result<>(new TokenResponseDto(TOKEN_TYPE, accessToken, systemProperties.getSso().getAccessTokenExpireTimeout(), refreshToken, systemProperties.getSso().getRefreshTokenExpireTimeout()));
     }
 
     /**
@@ -202,7 +202,7 @@ public class OauthController {
 
         // 判断密钥
         OauthTokenSecret tokenSecret = oauthTokenSecretService.getByRefreshTokenId(data.getString(PARAM_JTI));
-        if (null == tokenSecret) {
+        if (null == tokenSecret || !tokenSecret.isEnable()) {
             return OauthErrorResp.INVALID_TOKEN.getResp();
         }
 
@@ -224,6 +224,19 @@ public class OauthController {
     }
 
     /**
+     * 方法
+     */
+    interface Func {
+
+        /**
+         * 获取执行结果
+         * @return
+         * @param tokenSecret
+         */
+        Object execute(OauthTokenSecret tokenSecret);
+    }
+
+    /**
      * 刷新令牌
      *
      *
@@ -240,7 +253,7 @@ public class OauthController {
         // 更新并返回
         oauthTokenSecretService.updateAccessTokenIdAndSecret(tokenSecret);
         String accessToken = getToken(tokenSecret.getClientId(), tokenSecret.getAccessTokenId(), subject, tokenSecret.getAccessTokenSecret(), localDateTime, tokenSecret.getAccessExpireTime());
-        return new Result<>(new TokenResponseDto("bearer", accessToken, systemProperties.getSso().getAccessTokenExpireTimeout(), (tokenSecret.getRefreshExpireTime().getTime() - System.currentTimeMillis())/1000));
+        return new Result<>(new TokenResponseDto(TOKEN_TYPE, accessToken, systemProperties.getSso().getAccessTokenExpireTimeout(), (tokenSecret.getRefreshExpireTime().getTime() - System.currentTimeMillis())/1000));
     }
 
     /**
@@ -373,27 +386,118 @@ public class OauthController {
      * @return
      */
     @PostMapping("/logout")
-    public Receipt logout() {
-        // 获取令牌
-        return null;
+    public Object logout(HttpServletRequest request) {
+        return checkAndExecute(request, (tokenSecret) -> {
+            oauthTokenSecretService.updateStatus(tokenSecret.getAccessTokenId());
+            return new Result<>("退出成功");
+        });
     }
 
     /**
+     * 获取用户id
+     * @param request
+     * @return
+     */
+    @GetMapping("/checkAndGetUserId")
+    public Object check(HttpServletRequest request) {
+        return checkAndExecute(request, (tokenSecret) -> new Result<>(tokenSecret.getUserId()));
+    }
+
+    /**
+     * 检查令牌并执行
+     * @param request
+     * @param func
+     * @return
+     */
+    public Object checkAndExecute(HttpServletRequest request, Func func) {
+        String authorization = request.getHeader(TOKEN_KEY);
+        if (StringUtils.isBlank(authorization) || authorization.length() < TOKEN_TYPE.length() + 1) {
+            return OauthErrorResp.INVALID_TOKEN.getResp();
+        }
+
+        String token = authorization.substring(TOKEN_TYPE.length() + 1);
+        JSONObject data = getDataFromJwtToken(token);
+        if (null == data || StringUtils.isBlank(data.getString(PARAM_JTI)) || StringUtils.isBlank(data.getString(PARAM_CLIENT))) {
+            return OauthErrorResp.INVALID_TOKEN.getResp();
+        }
+
+        // 判断密钥
+        OauthTokenSecret tokenSecret = oauthTokenSecretService.getByAccessTokenId(data.getString(PARAM_JTI));
+        if (null == tokenSecret || !tokenSecret.isEnable()) {
+            return OauthErrorResp.INVALID_TOKEN.getResp();
+        }
+
+        // 判断过期
+        if (tokenSecret.getAccessExpireTime().before(new Date())) {
+            return OauthErrorResp.EXPIRED_TOKEN.getResp();
+        }
+
+        // 解析信息
+        try {
+            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(tokenSecret.getAccessTokenSecret()).parseClaimsJws(token);
+            String subject = claimsJws.getBody().getSubject();
+            return func.execute(tokenSecret);
+        } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
+            return OauthErrorResp.INVALID_TOKEN.getResp();
+        } catch (ExpiredJwtException expiredEx) {
+            return OauthErrorResp.EXPIRED_TOKEN.getResp();
+        }
+    }
+
+    /**
+     * 授权错误描述
      * @author pwh
      */
     public enum OauthErrorResp {
+
+        /**
+         * 非法请求
+         */
         INVALID_REQUEST(HttpStatus.BAD_REQUEST, "invalid_request", "非法请求"),
+
+        /**
+         * 非法授权
+         */
         INVALID_GRANT(HttpStatus.BAD_REQUEST, "invalid_grant", "非法授权"),
+
+        /**
+         * 不支持的授权类型
+         */
         UNSUPPORTED_GRANT_TYPE(HttpStatus.BAD_REQUEST, "unsupported_grant_type", "不支持的授权类型"),
+
+        /**
+         * 令牌过期
+         */
         EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "expired_token", "令牌过期"),
+
+        /**
+         * 非法令牌
+         */
         INVALID_TOKEN(HttpStatus.BAD_REQUEST, "invalid_token", "非法令牌"),
+
+        /**
+         * 用户名或者密码错误
+         */
         INVALID_USERNAME(HttpStatus.BAD_REQUEST, "invalid_user", "用户名或者密码错误"),
+
+        /**
+         * 非法客户端或者令牌
+         */
         INVALID_CLIENT(HttpStatus.UNAUTHORIZED, "invalid_client", "非法客户端或者令牌");
 
+        /**
+         * 状态
+         */
         HttpStatus status;
 
+        /**
+         * 错误码
+         */
         private String code;
 
+        /**
+         * 错误秒数
+         */
         private String msg;
 
         OauthErrorResp(HttpStatus status, String code, String msg) {

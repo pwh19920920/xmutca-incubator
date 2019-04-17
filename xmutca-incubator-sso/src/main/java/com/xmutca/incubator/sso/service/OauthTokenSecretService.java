@@ -58,4 +58,13 @@ public class OauthTokenSecretService {
         tokenSecret.setId(generator.getUid());
         return repository.save(tokenSecret);
     }
+
+    /**
+     * 更新状态
+     * @param accessTokenId
+     * @return
+     */
+    public int updateStatus(String accessTokenId) {
+        return repository.updateStatus(accessTokenId);
+    }
 }

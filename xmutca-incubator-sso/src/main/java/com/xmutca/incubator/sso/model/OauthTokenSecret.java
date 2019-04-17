@@ -57,6 +57,11 @@ public class OauthTokenSecret extends BaseEntity {
     private Long userId;
 
     /**
+     * 状态
+     */
+    private boolean enable;
+
+    /**
      * 获取新对象
      * @param userId
      * @param accessExpireTime
