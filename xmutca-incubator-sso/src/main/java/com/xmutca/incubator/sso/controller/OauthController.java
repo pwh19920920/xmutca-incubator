@@ -2,6 +2,7 @@ package com.xmutca.incubator.sso.controller;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
 import com.xmutca.incubator.sso.config.SystemProperties;
@@ -54,6 +55,7 @@ import java.util.concurrent.TimeUnit;
 public class OauthController {
 
     public static final String PARAM_JTI = "jti";
+    public static final String PARAM_CLIENT = "client";
 
     @NonNull
     private SmartValidator validator;
@@ -143,13 +145,15 @@ public class OauthController {
         oauthTokenSecretService.save(tokenSecret);
 
         // 返回令牌
-        String accessToken = getToken(tokenSecret.getAccessTokenId(), sysUserInfo.getId().toString(), tokenSecret.getAccessTokenSecret(), localDateTime, tokenSecret.getAccessExpireTime());
-        String refreshToken = getToken(tokenSecret.getRefreshTokenId(), sysUserInfo.getId().toString(), tokenSecret.getRefreshTokenSecret(), localDateTime, tokenSecret.getRefreshExpireTime());
+        String accessToken = getToken(requestVo.getClientId(), tokenSecret.getAccessTokenId(), sysUserInfo.getId().toString(), tokenSecret.getAccessTokenSecret(), localDateTime, tokenSecret.getAccessExpireTime());
+        String refreshToken = getToken(requestVo.getClientId(), tokenSecret.getRefreshTokenId(), sysUserInfo.getId().toString(), tokenSecret.getRefreshTokenSecret(), localDateTime, tokenSecret.getRefreshExpireTime());
         return new Result<>(new TokenResponseDto("bearer", accessToken, systemProperties.getSso().getAccessTokenExpireTimeout(), refreshToken, systemProperties.getSso().getRefreshTokenExpireTimeout()));
     }
 
     /**
      * 获取用户令牌
+     *
+     * @param clientId
      * @param jti
      * @param subject
      * @param secret
@@ -157,10 +161,11 @@ public class OauthController {
      * @param expireTime
      * @return
      */
-    private String getToken(String jti, String subject, String secret, LocalDateTime localDateTime, Date expireTime) {
+    private String getToken(String clientId, String jti, String subject, String secret, LocalDateTime localDateTime, Date expireTime) {
         return Jwts.builder()
                 .setSubject(subject)
                 .setId(jti)
+                .claim(PARAM_CLIENT, clientId)
                 .setIssuedAt(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
                 .setExpiration(expireTime)
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -172,11 +177,11 @@ public class OauthController {
      * @param token
      * @return
      */
-    public static String getJtiFromJwtToken(String token) {
+    public static JSONObject getDataFromJwtToken(String token) {
         try {
             String encodePlayLoad = token.substring(token.indexOf('.') + 1, token.lastIndexOf('.'));
             String decodePlayLoad = new String(Base64Utils.decodeFromString(encodePlayLoad));
-            return JSON.parseObject(decodePlayLoad).getString(PARAM_JTI);
+            return JSON.parseObject(decodePlayLoad);
         } catch (Exception ex) {
             return null;
         }
@@ -190,13 +195,13 @@ public class OauthController {
      */
     public Object tokenForRefresh(TokenRequestVo requestVo) {
         // 解析jti
-        String jti = getJtiFromJwtToken(requestVo.getRefreshToken());
-        if (null == jti) {
+        JSONObject data = getDataFromJwtToken(requestVo.getRefreshToken());
+        if (null == data || StringUtils.isBlank(data.getString(PARAM_JTI)) || StringUtils.isBlank(data.getString(PARAM_CLIENT))) {
             return OauthErrorResp.INVALID_TOKEN.getResp();
         }
 
         // 判断密钥
-        OauthTokenSecret tokenSecret = oauthTokenSecretService.getByRefreshTokenId(jti);
+        OauthTokenSecret tokenSecret = oauthTokenSecretService.getByRefreshTokenId(data.getString(PARAM_JTI));
         if (null == tokenSecret) {
             return OauthErrorResp.INVALID_TOKEN.getResp();
         }
@@ -210,7 +215,7 @@ public class OauthController {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(tokenSecret.getRefreshTokenSecret()).parseClaimsJws(requestVo.getRefreshToken());
             String subject = claimsJws.getBody().getSubject();
-            return refreshToken(tokenSecret, jti, subject);
+            return refreshToken(tokenSecret, data.getString(PARAM_JTI), subject);
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
             return OauthErrorResp.INVALID_TOKEN.getResp();
         } catch (ExpiredJwtException expiredEx) {
@@ -234,7 +239,7 @@ public class OauthController {
 
         // 更新并返回
         oauthTokenSecretService.updateAccessTokenIdAndSecret(tokenSecret);
-        String accessToken = getToken(tokenSecret.getAccessTokenId(), subject, tokenSecret.getAccessTokenSecret(), localDateTime, tokenSecret.getAccessExpireTime());
+        String accessToken = getToken(tokenSecret.getClientId(), tokenSecret.getAccessTokenId(), subject, tokenSecret.getAccessTokenSecret(), localDateTime, tokenSecret.getAccessExpireTime());
         return new Result<>(new TokenResponseDto("bearer", accessToken, systemProperties.getSso().getAccessTokenExpireTimeout(), (tokenSecret.getRefreshExpireTime().getTime() - System.currentTimeMillis())/1000));
     }
 
