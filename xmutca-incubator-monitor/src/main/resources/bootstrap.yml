@@ -5,6 +5,13 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8888
+        metadata:
+          user.name: ${spring.security.user.name}
+          user.password: ${spring.security.user.name}
       config:
         serverAddr: localhost:8888
         file-extension: yml
+  security:
+    user:
+      name: root
+      password: root

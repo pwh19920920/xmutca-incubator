@@ -26,4 +26,5 @@ spring:
   boot:
     admin:
       client:
-        url: http://localhost:8686
+        username: root
+        password: root
