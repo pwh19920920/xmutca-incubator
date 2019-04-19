@@ -11,7 +11,9 @@ spring:
       config:
         serverAddr: localhost:8888
         file-extension: yml
+
   security:
     user:
       name: root
       password: root
+

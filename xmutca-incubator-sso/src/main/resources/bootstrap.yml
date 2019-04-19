@@ -6,5 +6,7 @@ spring:
       discovery:
         server-addr: localhost:8888
       config:
-        serverAddr: localhost:8888
+        server_addr: localhost:8888
         file-extension: yml
+        shared-dataids: application.yml
+        refreshable-dataids: application.yml

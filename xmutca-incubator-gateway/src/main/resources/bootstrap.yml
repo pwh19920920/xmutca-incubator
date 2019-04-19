@@ -44,13 +44,14 @@ spring:
             - RewritePath=/consumer/(?<remaining>.*), /$\{remaining}
 
         - id: xmutca-incubator-sso
-            # lb代表从注册中心获取服务，且已负载均衡方式转发
-            uri: lb://xmutca-incubator-sso
-            predicates:
-              - Path=/sso
-            filters:
-              - StripPrefix=1
-              - RewritePath=/sso/(?<remaining>.*), /$\{remaining}
+          # lb代表从注册中心获取服务，且已负载均衡方式转发
+          uri: lb://xmutca-incubator-sso
+          predicates:
+            - Path=/sso
+          filters:
+            - StripPrefix=1
+            - RewritePath=/sso/(?<remaining>.*), /$\{remaining}
+
         - id: xmutca-incubator-example-provider
           uri: lb://xmutca-incubator-example-provider
           predicates:
