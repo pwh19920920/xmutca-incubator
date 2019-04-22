@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.xmutca.incubator.starter.xxl.job.XxlJobAutoConfiguration
+  com.xmutca.incubator.core.xxl.job.XxlJobAutoConfiguration

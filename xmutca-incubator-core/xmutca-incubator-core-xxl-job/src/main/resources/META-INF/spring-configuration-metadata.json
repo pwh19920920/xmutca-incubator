@@ -1,0 +1,56 @@
+{
+  "groups": [
+    {
+      "name": "xxl.job",
+      "type": "com.xmutca.incubator.core.xxl.job.config.XxlJobProperties",
+      "sourceType": "com.xmutca.incubator.core.xxl.job.config.XxlJobProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "xxl.job.access-token",
+      "type": "java.lang.String",
+      "description": "连接令牌",
+      "sourceType": "com.xmutca.incubator.core.xxl.job.config.XxlJobProperties"
+    },
+    {
+      "name": "xxl.job.app-name",
+      "type": "java.lang.String",
+      "description": "执行器AppName[选填]，为空则关闭自动注册",
+      "sourceType": "com.xmutca.incubator.core.xxl.job.config.XxlJobProperties"
+    },
+    {
+      "name": "xxl.job.ip",
+      "type": "java.lang.String",
+      "description": "执行器IP[选填]，为空则自动获取",
+      "sourceType": "com.xmutca.incubator.core.xxl.job.config.XxlJobProperties"
+    },
+    {
+      "name": "xxl.job.log-path",
+      "type": "java.lang.String",
+      "description": "执行器日志路径[选填]，为空则使用默认路径",
+      "sourceType": "com.xmutca.incubator.core.xxl.job.config.XxlJobProperties"
+    },
+    {
+      "name": "xxl.job.log-retention-days",
+      "type": "java.lang.Integer",
+      "description": "日志保存天数[选填]，值大于3时生效",
+      "sourceType": "com.xmutca.incubator.core.xxl.job.config.XxlJobProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "xxl.job.port",
+      "type": "java.lang.Integer",
+      "description": "执行器端口号[选填]，为空则自动获取",
+      "sourceType": "com.xmutca.incubator.core.xxl.job.config.XxlJobProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "xxl.job.registries",
+      "type": "java.lang.String",
+      "description": "admin server中心地址",
+      "sourceType": "com.xmutca.incubator.core.xxl.job.config.XxlJobProperties"
+    }
+  ],
+  "hints": []
+}

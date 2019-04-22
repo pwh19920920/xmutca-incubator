@@ -4,18 +4,15 @@ import com.xmutca.incubator.core.web.config.DefaultExceptionHandler;
 import com.xmutca.incubator.core.web.config.ErrorPagesConfiguration;
 import com.xmutca.incubator.core.web.config.FastJsonConfiguration;
 import com.xmutca.incubator.core.web.config.RequestLoggerConfiguration;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-
-import java.lang.annotation.*;
 
 /**
  * @version Revision: 0.0.1
  * @author: weihuang.peng
  * @Date: 2019-03-25
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-@Documented
+@Configuration
 @Import({DefaultExceptionHandler.class, ErrorPagesConfiguration.class, RequestLoggerConfiguration.class, FastJsonConfiguration.class})
-public @interface EnableWeb {
+public class WebAutoConfiguration {
 }

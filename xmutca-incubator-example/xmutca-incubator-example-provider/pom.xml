@@ -18,11 +18,6 @@
 			<groupId>com.xmutca</groupId>
 			<artifactId>xmutca-incubator-archetype</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,7 +1,8 @@
-package com.xmutca.incubator.starter.feign;
+package com.xmutca.incubator.core.feign;
 
-import com.xmutca.incubator.core.feign.EnableFeign;
+import com.xmutca.incubator.core.feign.config.FeignConfiguration;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  *
@@ -9,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @version Revision: 0.0.1
  * @Date: 2018/4/20
  */
-@EnableFeign
 @Configuration
+@Import({FeignConfiguration.class})
 public class FeignAutoConfiguration {
 }

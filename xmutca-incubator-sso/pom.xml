@@ -21,17 +21,18 @@
 
 		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-core-mybatis</artifactId>
+			<artifactId>xmutca-incubator-starter-sequence</artifactId>
+		</dependency>
+
+		<!-- db -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-starter-sequence</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<artifactId>xmutca-incubator-core-mybatis</artifactId>
 		</dependency>
 
 		<dependency>
@@ -39,6 +40,7 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 
+		<!-- util -->
 		<dependency>
 			<groupId>com.xmutca</groupId>
 			<artifactId>xmutca-incubator-core-lang</artifactId>
@@ -47,11 +49,6 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
 		</dependency>
 	</dependencies>
 

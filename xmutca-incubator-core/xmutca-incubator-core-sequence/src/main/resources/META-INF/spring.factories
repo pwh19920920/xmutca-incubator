@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.xmutca.incubator.starter.sequence.SequenceAutoConfiguration
+  com.xmutca.incubator.core.sequence.SequenceAutoConfiguration
