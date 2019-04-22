@@ -24,6 +24,10 @@ public class LoginStatusGatewayFilterFactory extends AbstractGatewayFilterFactor
     @Autowired
     private SsoFeign ssoFeign;
 
+    public LoginStatusGatewayFilterFactory() {
+        super(Config.class);
+    }
+
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
@@ -54,5 +58,10 @@ public class LoginStatusGatewayFilterFactory extends AbstractGatewayFilterFactor
          * 响应状态码
          */
         private HttpStatus statusCode = HttpStatus.UNAUTHORIZED;
+
+        public Config setStatusCode(HttpStatus statusCode) {
+			this.statusCode = statusCode;
+			return this;
+		}
     }
 }

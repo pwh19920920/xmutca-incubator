@@ -14,7 +14,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<spring-boot-dependencies.version>2.1.3.RELEASE</spring-boot-dependencies.version>
-		<spring-alibaba.version>0.2.1.RELEASE</spring-alibaba.version>
+		<spring-alibaba.version>0.2.2.RELEASE</spring-alibaba.version>
 		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
 		<fastjson.version>1.2.56</fastjson.version>
 		<logstash-logback-encoder.verison>5.3</logstash-logback-encoder.verison>

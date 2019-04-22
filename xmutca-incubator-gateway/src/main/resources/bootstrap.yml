@@ -30,8 +30,8 @@ spring:
            # - Header=X-Request-Id, xmutca-incubator-example-consumer-Id
           filters:
             - StripPrefix=1
-            # - RewritePath=/consumer/(?<remaining>.*), /$\{remaining}
-
+            - LoginStatus
+            - Authorize
         - id: xmutca-incubator-example-consumer-test
           # lb代表从注册中心获取服务，且已负载均衡方式转发
           uri: lb://xmutca-incubator-example-consumer
@@ -47,7 +47,7 @@ spring:
           # lb代表从注册中心获取服务，且已负载均衡方式转发
           uri: lb://xmutca-incubator-sso
           predicates:
-            - Path=/sso
+            - Path=/sso/**
           filters:
             - StripPrefix=1
             - RewritePath=/sso/(?<remaining>.*), /$\{remaining}

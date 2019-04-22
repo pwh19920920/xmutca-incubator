@@ -101,7 +101,7 @@ public class AuthorizeGatewayFilterFactory extends AbstractGatewayFilterFactory<
          */
         public String getAuthorizeKey() {
             if (StringUtils.isBlank(authorizeCode)) {
-                return DEFAULT_AUTHORIZE_KEY;
+                authorizeKey = DEFAULT_AUTHORIZE_KEY;
             }
             return authorizeKey;
         }

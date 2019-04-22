@@ -1,5 +1,6 @@
 package com.xmutca.incubator.gateway.exception;
 
+import com.xmutca.incubator.core.common.exception.BaseException;
 import com.xmutca.incubator.core.common.response.Receipt;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,11 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
             if (ex.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR) {
                 return putAttr2Result(result, ex.getStatus().value(), "sorry, unknown error has occurred!");
             }
+        }
+
+        if (error instanceof BaseException) {
+            BaseException ex = ((BaseException) error);
+            return putAttr2Result(result, ex.getStatus(), ex.getMessage());
         }
 
         if (null == error.getCause()) {

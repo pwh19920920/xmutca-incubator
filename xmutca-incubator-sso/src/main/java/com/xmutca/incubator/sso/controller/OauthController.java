@@ -3,7 +3,6 @@ package com.xmutca.incubator.sso.controller;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
 import com.xmutca.incubator.sso.config.SystemProperties;
 import com.xmutca.incubator.sso.dto.TokenResponseDto;
@@ -421,7 +420,7 @@ public class OauthController {
     public Object checkAndExecute(HttpServletRequest request, Func func) {
         String authorization = request.getHeader(TOKEN_KEY);
         if (StringUtils.isBlank(authorization) || authorization.length() < TOKEN_TYPE.length() + 1) {
-            return OauthErrorResp.INVALID_TOKEN.getResp();
+            return OauthErrorResp.INVALID_CLIENT.getResp();
         }
 
         String token = authorization.substring(TOKEN_TYPE.length() + 1);
