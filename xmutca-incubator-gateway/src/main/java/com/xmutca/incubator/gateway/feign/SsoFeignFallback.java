@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class SsoFeignFallback implements SsoFeign {
 
     @Override
-    public Result checkAndGetUserId() {
+    public Result<String> checkAndGetUserId(String token) {
         throw new ServiceException("用户令牌解析失败，请稍后再试！");
     }
 }

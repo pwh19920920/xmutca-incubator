@@ -11,6 +11,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,14 +32,16 @@ public class LoginStatusGatewayFilterFactory extends AbstractGatewayFilterFactor
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
-            Result<Long> result = ssoFeign.checkAndGetUserId();
+            String token = exchange.getRequest().getHeaders().getFirst(Constants.TOKEN_KEY);
+            Result<String> result = ssoFeign.checkAndGetUserId(token);
             if (null == result.getData()) {
                 return ResultUtils.build401Result(exchange, config.getStatusCode());
             }
 
             // 转发用户信息
-            exchange.getRequest().getHeaders().add(Constants.LOGIN_USER_KEY, result.getData().toString());
-            return chain.filter(exchange);
+            ServerHttpRequest request = exchange.getRequest().mutate()
+                    .header(Constants.LOGIN_USER_KEY, result.getData()).build();
+            return chain.filter(exchange.mutate().request(request).build());
         };
     }
 

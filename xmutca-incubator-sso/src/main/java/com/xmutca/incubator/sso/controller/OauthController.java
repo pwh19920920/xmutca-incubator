@@ -18,7 +18,6 @@ import io.jsonwebtoken.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -74,14 +73,6 @@ public class OauthController {
 
     @NonNull
     private OauthTokenSecretService oauthTokenSecretService;
-
-    @Value("${key:111}")
-    private String key;
-
-    @RequestMapping("/test")
-    public String test() {
-        return key;
-    }
 
     /**
      * 令牌服务
@@ -408,7 +399,7 @@ public class OauthController {
      */
     @GetMapping("/checkAndGetUserId")
     public Object check(HttpServletRequest request) {
-        return checkAndExecute(request, (tokenSecret) -> new Result<>(tokenSecret.getUserId()));
+        return checkAndExecute(request, (tokenSecret) -> new Result<Long>(tokenSecret.getUserId()));
     }
 
     /**

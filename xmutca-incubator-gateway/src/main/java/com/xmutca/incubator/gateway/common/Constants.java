@@ -11,4 +11,6 @@ public class Constants {
      * 当前登陆用户
      */
     public static final String LOGIN_USER_KEY = "X-Request-User";
+
+    public static final String TOKEN_KEY = "authorization";
 }
