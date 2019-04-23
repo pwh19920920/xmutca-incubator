@@ -1,5 +1,7 @@
 package com.xmutca.incubator.sso;
 
+import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
+import com.alicp.jetcache.anno.config.EnableMethodCache;
 import com.xmutca.incubator.sso.config.SystemProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +12,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 /**
  * @author weihuang.peng
  */
+@EnableMethodCache(basePackages = "com.xmutca")
+@EnableCreateCacheAnnotation
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication

@@ -16,4 +16,10 @@
         select <include refid="columns"/>
         from oauth_client_info
     </select>
+
+    <select id="getByClientId" resultMap="resultMap">
+        select <include refid="columns"/>
+        from oauth_client_info
+        where client_id = #{clientId}
+    </select>
 </mapper>

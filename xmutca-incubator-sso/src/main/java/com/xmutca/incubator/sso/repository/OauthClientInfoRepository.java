@@ -18,4 +18,11 @@ public interface OauthClientInfoRepository {
      * @return
      */
     List<OauthClientInfo> findAll();
+
+    /**
+     * 获取信息
+     * @param clientId
+     * @return
+     */
+    OauthClientInfo getByClientId(String clientId);
 }

@@ -1,7 +1,7 @@
 package com.xmutca.incubator.gateway.filter.authorize;
 
 import com.google.common.collect.Lists;
-import com.xmutca.incubator.gateway.common.Constants;
+import com.xmutca.incubator.core.common.constant.RequestConstant;
 import com.xmutca.incubator.gateway.util.ResultUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +38,7 @@ public class AuthorizeGatewayFilterFactory extends AbstractGatewayFilterFactory<
 
         return (exchange, chain) -> {
             // 此路径无需登陆
-            String user = exchange.getRequest().getHeaders().getFirst(Constants.LOGIN_USER_KEY);
+            String user = exchange.getRequest().getHeaders().getFirst(RequestConstant.REQUEST_HEADER_USER);
             if (StringUtils.isBlank(user)) {
                 return chain.filter(exchange);
             }

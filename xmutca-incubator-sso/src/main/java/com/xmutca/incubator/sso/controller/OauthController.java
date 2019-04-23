@@ -3,6 +3,7 @@ package com.xmutca.incubator.sso.controller;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.xmutca.incubator.core.common.constant.RequestConstant;
 import com.xmutca.incubator.core.common.response.Result;
 import com.xmutca.incubator.sso.config.SystemProperties;
 import com.xmutca.incubator.sso.dto.TokenResponseDto;
@@ -18,8 +19,6 @@ import io.jsonwebtoken.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 认证服务
@@ -53,7 +49,7 @@ public class OauthController {
 
     public static final String PARAM_JTI = "jti";
     public static final String PARAM_CLIENT = "client";
-    public static final String TOKEN_KEY = "authorization";
+    public static final String TOKEN_KEY = RequestConstant.REQUEST_HEADER_TOKEN;
     public static final String TOKEN_TYPE = "bearer";
 
     @NonNull
@@ -83,7 +79,7 @@ public class OauthController {
     @PostMapping(value = "/token")
     public Object token(@Validated @RequestBody TokenRequestVo requestVo) {
         // 检查client/secret是否存在且正确
-        OauthClientInfo oauthClientInfo = getClientInfo(requestVo);
+        OauthClientInfo oauthClientInfo = oauthClientInfoService.getByClientId(requestVo.getClientId());
         if (null == oauthClientInfo) {
             return OauthErrorResp.INVALID_CLIENT.getResp();
         }
@@ -247,61 +243,13 @@ public class OauthController {
     private Object refreshToken(OauthTokenSecret tokenSecret, String refreshTokenId, String subject) {
         LocalDateTime localDateTime = LocalDateTime.now();
         Date accessExpireTime = Date.from(localDateTime.plusSeconds(systemProperties.getSso().getAccessTokenExpireTimeout()).atZone(ZoneId.systemDefault()).toInstant());
+        String oldAccessTokenId = tokenSecret.getAccessTokenId();
         OauthTokenSecret.newUpdateInstance(tokenSecret, accessExpireTime, refreshTokenId);
 
         // 更新并返回
-        oauthTokenSecretService.updateAccessTokenIdAndSecret(tokenSecret);
+        oauthTokenSecretService.updateAccessTokenIdAndSecret(oldAccessTokenId, tokenSecret);
         String accessToken = getToken(tokenSecret.getClientId(), tokenSecret.getAccessTokenId(), subject, tokenSecret.getAccessTokenSecret(), localDateTime, tokenSecret.getAccessExpireTime());
         return new Result<>(new TokenResponseDto(TOKEN_TYPE, accessToken, systemProperties.getSso().getAccessTokenExpireTimeout(), (tokenSecret.getRefreshExpireTime().getTime() - System.currentTimeMillis())/1000));
-    }
-
-    /**
-     * 可改造为从缓存读取，如果不存在，则从数据库中读取并设置进缓存
-     *
-     * @param clientId
-     * @return
-     */
-    private String getSecret(String clientId) {
-        return redisTemplate.boundValueOps(getClientKey(clientId)).get();
-    }
-
-    /**
-     * 可改造为从缓存读取，如果不存在，则从数据库中读取并设置进缓存
-     *
-     * @param requestVo
-     * @return
-     */
-    private OauthClientInfo getClientInfo(TokenRequestVo requestVo) {
-        if (StringUtils.isBlank(getSecret(requestVo.getClientId()))) {
-            String lockVal = UUID.randomUUID().toString();
-            try {
-                boolean locked = tryGetDistributedLock("lock", lockVal, 10, TimeUnit.SECONDS);
-                if (locked && StringUtils.isBlank(getSecret(requestVo.getClientId()))) {
-                    // select from db
-                    List<OauthClientInfo> oauthClientInfoList = oauthClientInfoService.findAll();
-                    oauthClientInfoList.parallelStream().forEach(oauthClientInfo -> redisTemplate.opsForValue().set(getClientKey(oauthClientInfo.getClientId()), JSON.toJSONString(oauthClientInfo)));
-                }
-            } finally {
-                releaseDistributedLock("lock", lockVal);
-            }
-        }
-
-        String data = getSecret(requestVo.getClientId());
-        if (StringUtils.isBlank(data)) {
-            return null;
-        }
-
-        return JSON.parseObject(data, OauthClientInfo.class);
-    }
-
-    /**
-     * 获取客户端key
-     *
-     * @param clientId
-     * @return
-     */
-    private String getClientKey(String clientId) {
-        return String.format("oauth_client:%s", clientId);
     }
 
     /**
@@ -345,48 +293,13 @@ public class OauthController {
     }
 
     /**
-     * lock
-     *
-     * @param key
-     * @param val
-     * @return
-     */
-    public boolean tryGetDistributedLock(String key, String val, long timeout, TimeUnit unit) {
-        try {
-            boolean result = redisTemplate.opsForValue().setIfAbsent(key, val, timeout, unit);
-            if (!result) {
-                wait(10000);
-                return tryGetDistributedLock(key, val, timeout, unit);
-            }
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    /**
-     * release
-     *
-     * @param key
-     * @param val
-     * @return
-     */
-    public boolean releaseDistributedLock(String key, String val) {
-        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-        Object result = redisTemplate.execute((RedisConnection connection) -> connection.eval(
-                script.getBytes(), ReturnType.INTEGER, 1, key.getBytes(), val.getBytes()
-        ));
-        return "1L".equals(result);
-    }
-
-    /**
      * 退出
      *
      * @return
      */
     @PostMapping("/logout")
     public Object logout(HttpServletRequest request) {
-        return checkAndExecute(request, (tokenSecret) -> {
+        return checkAndExecute(request, (OauthTokenSecret tokenSecret) -> {
             oauthTokenSecretService.updateStatus(tokenSecret.getAccessTokenId());
             return new Result<>("退出成功");
         });
@@ -399,7 +312,7 @@ public class OauthController {
      */
     @GetMapping("/checkAndGetUserId")
     public Object check(HttpServletRequest request) {
-        return checkAndExecute(request, (tokenSecret) -> new Result<Long>(tokenSecret.getUserId()));
+        return checkAndExecute(request, (OauthTokenSecret tokenSecret) -> new Result<Long>(tokenSecret.getUserId()));
     }
 
     /**
@@ -434,7 +347,7 @@ public class OauthController {
         // 解析信息
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(tokenSecret.getAccessTokenSecret()).parseClaimsJws(token);
-            String subject = claimsJws.getBody().getSubject();
+            claimsJws.getBody().getSubject();
             return func.execute(tokenSecret);
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
             return OauthErrorResp.INVALID_TOKEN.getResp();

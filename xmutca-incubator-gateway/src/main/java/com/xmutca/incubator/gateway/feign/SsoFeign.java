@@ -1,7 +1,7 @@
 package com.xmutca.incubator.gateway.feign;
 
+import com.xmutca.incubator.core.common.constant.RequestConstant;
 import com.xmutca.incubator.core.common.response.Result;
-import com.xmutca.incubator.gateway.common.Constants;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,5 +22,5 @@ public interface SsoFeign {
      * @return
      */
     @GetMapping("/oauth/checkAndGetUserId")
-    Result<String> checkAndGetUserId(@RequestHeader(Constants.TOKEN_KEY) String token);
+    Result<String> checkAndGetUserId(@RequestHeader(RequestConstant.REQUEST_HEADER_USER) String token);
 }

@@ -1,5 +1,6 @@
 package com.xmutca.incubator.sso.service;
 
+import com.alicp.jetcache.anno.*;
 import com.xmutca.incubator.core.sequence.facade.Generator;
 import com.xmutca.incubator.sso.model.OauthTokenSecret;
 import com.xmutca.incubator.sso.repository.OauthTokenSecretRepository;
@@ -27,6 +28,9 @@ public class OauthTokenSecretService {
      * @param accessTokenId
      * @return
      */
+    @CachePenetrationProtect
+    @Cached(expire = 600, localExpire = 120, cacheType = CacheType.BOTH, name="sso:access_token_id:", key = "#accessTokenId")
+    @CacheRefresh(refresh = 120, stopRefreshAfterLastAccess = 600)
     public OauthTokenSecret getByAccessTokenId(String accessTokenId) {
         return repository.getByAccessTokenId(accessTokenId);
     }
@@ -36,16 +40,22 @@ public class OauthTokenSecretService {
      * @param refreshTokenId
      * @return
      */
+    @CachePenetrationProtect
+    @Cached(expire = 600, localExpire = 120, cacheType = CacheType.BOTH, name="sso:refresh_token_id:", key = "#refreshTokenId")
+    @CacheRefresh(refresh = 120, stopRefreshAfterLastAccess = 600)
     public OauthTokenSecret getByRefreshTokenId(String refreshTokenId) {
         return repository.getByRefreshTokenId(refreshTokenId);
     }
 
     /**
      * 更新访问令牌
+     *
+     * @param oldAccessTokenId
      * @param tokenSecret
      * @return
      */
-    public int updateAccessTokenIdAndSecret(OauthTokenSecret tokenSecret) {
+    @CacheInvalidate(name="sso:access_token_id:", key = "#oldAccessTokenId")
+    public int updateAccessTokenIdAndSecret(String oldAccessTokenId, OauthTokenSecret tokenSecret) {
         return repository.updateAccessTokenIdAndSecret(tokenSecret);
     }
 
@@ -64,6 +74,7 @@ public class OauthTokenSecretService {
      * @param accessTokenId
      * @return
      */
+    @CacheInvalidate(name="sso:access_token_id:", key = "#accessTokenId")
     public int updateStatus(String accessTokenId) {
         return repository.updateStatus(accessTokenId);
     }

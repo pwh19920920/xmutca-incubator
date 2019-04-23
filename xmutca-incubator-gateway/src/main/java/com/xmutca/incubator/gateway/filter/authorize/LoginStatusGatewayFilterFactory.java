@@ -1,7 +1,7 @@
 package com.xmutca.incubator.gateway.filter.authorize;
 
+import com.xmutca.incubator.core.common.constant.RequestConstant;
 import com.xmutca.incubator.core.common.response.Result;
-import com.xmutca.incubator.gateway.common.Constants;
 import com.xmutca.incubator.gateway.feign.SsoFeign;
 import com.xmutca.incubator.gateway.util.ResultUtils;
 import lombok.Getter;
@@ -32,7 +32,7 @@ public class LoginStatusGatewayFilterFactory extends AbstractGatewayFilterFactor
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
-            String token = exchange.getRequest().getHeaders().getFirst(Constants.TOKEN_KEY);
+            String token = exchange.getRequest().getHeaders().getFirst(RequestConstant.REQUEST_HEADER_TOKEN);
             Result<String> result = ssoFeign.checkAndGetUserId(token);
             if (null == result.getData()) {
                 return ResultUtils.build401Result(exchange, config.getStatusCode());
@@ -40,7 +40,7 @@ public class LoginStatusGatewayFilterFactory extends AbstractGatewayFilterFactor
 
             // 转发用户信息
             ServerHttpRequest request = exchange.getRequest().mutate()
-                    .header(Constants.LOGIN_USER_KEY, result.getData()).build();
+                    .header(RequestConstant.REQUEST_HEADER_USER, result.getData()).build();
             return chain.filter(exchange.mutate().request(request).build());
         };
     }

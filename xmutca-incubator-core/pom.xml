@@ -19,5 +19,7 @@
 		<module>xmutca-incubator-core-xxl-job</module>
 		<module>xmutca-incubator-core-lang</module>
 		<module>xmutca-incubator-core-sequence</module>
+		<module>xmutca-incubator-core-cache</module>
+		<module>xmutca-incubator-core-lock</module>
 	</modules>
 </project>

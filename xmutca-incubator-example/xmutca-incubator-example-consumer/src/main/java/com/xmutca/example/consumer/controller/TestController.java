@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @version Revision: 0.0.1
  * @author: weihuang.peng
@@ -35,7 +37,7 @@ public class TestController {
     }
 
     @RequestMapping("/test/{id}")
-    public Receipt testId(@PathVariable String id) {
+    public Receipt testId(@PathVariable String id, HttpServletRequest request) {
         log.info("consumer test request:{}", id);
         return new Receipt(id);
     }

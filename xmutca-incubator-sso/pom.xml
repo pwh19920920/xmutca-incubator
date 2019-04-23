@@ -24,6 +24,11 @@
 			<artifactId>xmutca-incubator-starter-sequence</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-core-cache</artifactId>
+		</dependency>
+
 		<!-- db -->
 		<dependency>
 			<groupId>mysql</groupId>

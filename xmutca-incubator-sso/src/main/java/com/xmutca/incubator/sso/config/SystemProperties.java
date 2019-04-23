@@ -14,6 +14,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("system")
 public class SystemProperties {
 
+    /**
+     * sso配置
+     */
     private SsoProperties sso;
 
     @Getter

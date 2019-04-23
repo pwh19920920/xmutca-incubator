@@ -26,6 +26,7 @@
 		<guava.version>27.1-jre</guava.version>
 		<hutool.version>4.5.6</hutool.version>
 		<jjwt.version>0.9.1</jjwt.version>
+		<jetcache.version>2.5.12</jetcache.version>
 
 		<xmutca-incubator-core-common.version>0.0.1-SNAPSHOT</xmutca-incubator-core-common.version>
 		<xmutca-incubator-core-web.version>0.0.1-SNAPSHOT</xmutca-incubator-core-web.version>
@@ -35,6 +36,7 @@
 		<xmutca-incubator-core-mybatis.version>0.0.1-SNAPSHOT</xmutca-incubator-core-mybatis.version>
 		<xmutca-incubator-core-xxl-job.version>0.0.1-SNAPSHOT</xmutca-incubator-core-xxl-job.version>
 		<xmutca-incubator-core-lang.version>0.0.1-SNAPSHOT</xmutca-incubator-core-lang.version>
+		<xmutca-incubator-core-cache.version>0.0.1-SNAPSHOT</xmutca-incubator-core-cache.version>
 		<xmutca-incubator-core-sequence.version>0.0.1-SNAPSHOT</xmutca-incubator-core-sequence.version>
 		<xmutca-incubator-starter-web.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-web.version>
 		<xmutca-incubator-starter-feign.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-feign.version>
@@ -153,6 +155,13 @@
 				<version>${xxl-job.version}</version>
 			</dependency>
 
+			<!-- cache -->
+			<dependency>
+				<groupId>com.alicp.jetcache</groupId>
+				<artifactId>jetcache-starter-redis</artifactId>
+				<version>${jetcache.version}</version>
+			</dependency>
+
 			<!-- core -->
 			<dependency>
 				<groupId>com.xmutca</groupId>
@@ -182,6 +191,12 @@
 				<groupId>com.xmutca</groupId>
 				<artifactId>xmutca-incubator-core-webflux</artifactId>
 				<version>${xmutca-incubator-core-webflux.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-core-cache</artifactId>
+				<version>${xmutca-incubator-core-cache.version}</version>
 			</dependency>
 
 			<dependency>
