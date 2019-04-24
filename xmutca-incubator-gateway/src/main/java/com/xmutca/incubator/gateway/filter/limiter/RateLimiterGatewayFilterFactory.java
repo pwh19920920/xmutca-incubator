@@ -79,7 +79,7 @@ public class RateLimiterGatewayFilterFactory extends RequestRateLimiterGatewayFi
                         return chain.filter(exchange);
                     }
 
-                    return ResultUtils.build429Result(exchange, config.getStatusCode());
+                    return ResultUtils.build429Result(exchange);
                 });
             });
         };

@@ -1,6 +1,8 @@
 package com.xmutca.incubator.gateway.util;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.net.HttpHeaders;
+import com.google.common.net.MediaType;
 import com.xmutca.incubator.core.common.response.Receipt;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,12 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.s
  */
 public class ResultUtils {
 
-    private ResultUtils() {}
+    private ResultUtils() {
+    }
 
     /**
      * 生成报文
+     *
      * @param exchange
      * @param httpStatus
      * @param message
@@ -32,36 +36,77 @@ public class ResultUtils {
         Receipt resp = new Receipt(httpStatus.value(), message);
         DataBuffer data = originResponse.bufferFactory().wrap(JSON.toJSONBytes(resp));
         setResponseStatus(exchange, httpStatus);
+        originResponse.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.JSON_UTF_8.toString());
         return originResponse.writeWith(Flux.just(data));
+    }
+
+    /**
+     * 400
+     *
+     * @param exchange
+     * @return
+     */
+    public static Mono<Void> build400Result(ServerWebExchange exchange) {
+        return buildResult(exchange, HttpStatus.BAD_REQUEST, "sorry, current request is bad");
+    }
+
+    /**
+     * 400
+     * @param exchange
+     * @param message
+     * @return
+     */
+    public static Mono<Void> build400Result(ServerWebExchange exchange, String message) {
+        return buildResult(exchange, HttpStatus.BAD_REQUEST, message);
+    }
+
+    /**
+     * 401
+     *
+     * @param exchange
+     * @return
+     */
+    public static Mono<Void> build401Result(ServerWebExchange exchange) {
+        return buildResult(exchange, HttpStatus.UNAUTHORIZED, "sorry, current request need login");
     }
 
     /**
      * 401
      * @param exchange
-     * @param httpStatus
+     * @param message
      * @return
      */
-    public static Mono<Void> build401Result(ServerWebExchange exchange, HttpStatus httpStatus) {
-        return buildResult(exchange, httpStatus, "sorry, current request need login");
+    public static Mono<Void> build401Result(ServerWebExchange exchange, String message) {
+        return buildResult(exchange, HttpStatus.UNAUTHORIZED, message);
+    }
+
+    /**
+     * 403
+     *
+     * @param exchange
+     * @return
+     */
+    public static Mono<Void> build403Result(ServerWebExchange exchange) {
+        return buildResult(exchange, HttpStatus.FORBIDDEN, "forbidden request current uri");
     }
 
     /**
      * 403
      * @param exchange
-     * @param httpStatus
+     * @param message
      * @return
      */
-    public static Mono<Void> build403Result(ServerWebExchange exchange, HttpStatus httpStatus) {
-        return buildResult(exchange, httpStatus, "forbidden request current uri");
+    public static Mono<Void> build403Result(ServerWebExchange exchange, String message) {
+        return buildResult(exchange, HttpStatus.FORBIDDEN, message);
     }
 
     /**
      * 429
+     *
      * @param exchange
-     * @param httpStatus
      * @return
      */
-    public static Mono<Void> build429Result(ServerWebExchange exchange, HttpStatus httpStatus) {
-        return buildResult(exchange, httpStatus, "request to many, please wait for a moment!");
+    public static Mono<Void> build429Result(ServerWebExchange exchange) {
+        return buildResult(exchange, HttpStatus.TOO_MANY_REQUESTS, "request to many, please wait for a moment!");
     }
 }

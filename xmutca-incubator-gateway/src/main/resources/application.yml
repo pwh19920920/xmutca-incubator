@@ -10,6 +10,8 @@ management:
   endpoint:
     health:
       show-details: always
+  server:
+    port: 3388
 
 logging:
   file: logs/${spring.application.name}-log

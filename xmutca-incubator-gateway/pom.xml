@@ -84,7 +84,12 @@
 			<groupId>com.xmutca</groupId>
 			<artifactId>xmutca-incubator-starter-feign</artifactId>
 		</dependency>
-	</dependencies>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

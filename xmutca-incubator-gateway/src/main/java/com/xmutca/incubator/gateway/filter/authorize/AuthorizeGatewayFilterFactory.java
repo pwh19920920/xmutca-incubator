@@ -40,21 +40,22 @@ public class AuthorizeGatewayFilterFactory extends AbstractGatewayFilterFactory<
             // 此路径无需登陆
             String user = exchange.getRequest().getHeaders().getFirst(RequestConstant.REQUEST_HEADER_USER);
             if (StringUtils.isBlank(user)) {
-                return chain.filter(exchange);
+                return ResultUtils.build401Result(exchange);
             }
 
             // 获取路径判断
             String requestUri = exchange.getRequest().getPath().value();
             for (String pattern : config.getUri()) {
                 if (!matcher.match(pattern, requestUri)) {
-                    return ResultUtils.build403Result(exchange, config.getStatusCode());
+                    return ResultUtils.build403Result(exchange);
                 }
             }
 
             // 获取用户的权限判断
             List<String> authorities = Lists.newArrayList();
-            if (!authorities.contains(config.getAuthorizeKey())) {
-                return ResultUtils.build403Result(exchange, config.getStatusCode());
+            String authorizeCode = exchange.getRequest().getHeaders().getFirst(config.getAuthorizeKey());
+            if (!authorities.contains(authorizeCode)) {
+                return ResultUtils.build403Result(exchange);
             }
             return chain.filter(exchange);
         };
@@ -100,7 +101,7 @@ public class AuthorizeGatewayFilterFactory extends AbstractGatewayFilterFactory<
          * @return
          */
         public String getAuthorizeKey() {
-            if (StringUtils.isBlank(authorizeCode)) {
+            if (StringUtils.isBlank(authorizeKey)) {
                 authorizeKey = DEFAULT_AUTHORIZE_KEY;
             }
             return authorizeKey;

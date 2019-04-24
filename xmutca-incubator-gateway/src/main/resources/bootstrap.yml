@@ -29,9 +29,13 @@ spring:
             - Method=GET
            # - Header=X-Request-Id, xmutca-incubator-example-consumer-Id
           filters:
-            - StripPrefix=1
             - LoginStatus
-            - Authorize
+            - name: Authorize
+              args:
+                authorize_code: test
+                uri: /consumer/test/{key}
+            - StripPrefix=1
+
         - id: xmutca-incubator-example-consumer-test
           # lb代表从注册中心获取服务，且已负载均衡方式转发
           uri: lb://xmutca-incubator-example-consumer

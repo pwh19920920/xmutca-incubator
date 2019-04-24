@@ -22,5 +22,5 @@ public interface SsoFeign {
      * @return
      */
     @GetMapping("/oauth/checkAndGetUserId")
-    Result<String> checkAndGetUserId(@RequestHeader(RequestConstant.REQUEST_HEADER_USER) String token);
+    Result<String> checkAndGetUserId(@RequestHeader(RequestConstant.REQUEST_HEADER_TOKEN) String token);
 }

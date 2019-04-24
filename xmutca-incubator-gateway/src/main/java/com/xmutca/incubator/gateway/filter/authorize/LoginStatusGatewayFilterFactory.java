@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.Ordered;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +34,7 @@ public class LoginStatusGatewayFilterFactory extends AbstractGatewayFilterFactor
             String token = exchange.getRequest().getHeaders().getFirst(RequestConstant.REQUEST_HEADER_TOKEN);
             Result<String> result = ssoFeign.checkAndGetUserId(token);
             if (null == result.getData()) {
-                return ResultUtils.build401Result(exchange, config.getStatusCode());
+                return ResultUtils.build401Result(exchange);
             }
 
             // 转发用户信息
@@ -57,14 +56,5 @@ public class LoginStatusGatewayFilterFactory extends AbstractGatewayFilterFactor
     @Setter
     public static class Config {
 
-        /**
-         * 响应状态码
-         */
-        private HttpStatus statusCode = HttpStatus.UNAUTHORIZED;
-
-        public Config setStatusCode(HttpStatus statusCode) {
-			this.statusCode = statusCode;
-			return this;
-		}
     }
 }
