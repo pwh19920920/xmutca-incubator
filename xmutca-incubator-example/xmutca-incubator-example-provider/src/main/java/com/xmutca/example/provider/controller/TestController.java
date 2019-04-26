@@ -28,6 +28,6 @@ public class TestController {
     @RequestMapping("/provider")
     public Receipt test() {
         log.info("provider request");
-        throw new ServiceException("xxx");
+        throw new ServiceException("SentinelBlockException");
     }
 }

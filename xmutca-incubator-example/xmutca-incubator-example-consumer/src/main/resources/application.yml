@@ -14,6 +14,8 @@ management:
 
 feign:
   hystrix:
+    enabled: false
+  sentinel:
     enabled: true
 
 
@@ -28,3 +30,8 @@ spring:
       client:
         username: root
         password: root
+  cloud:
+    sentinel:
+      eager: true
+      transport:
+        dashboard: localhost:8080

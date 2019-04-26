@@ -1,6 +1,5 @@
 package com.xmutca.incubator.core.common.exception;
 
-import com.netflix.hystrix.exception.HystrixBadRequestException;
 import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
 
@@ -8,7 +7,7 @@ import com.xmutca.incubator.core.common.response.Result;
  * 基本的异常处理
  * @author Peter
  */
-public abstract class BaseException extends HystrixBadRequestException {
+public abstract class BaseException extends RuntimeException {
 
     public BaseException(String message) {
         super(message);
