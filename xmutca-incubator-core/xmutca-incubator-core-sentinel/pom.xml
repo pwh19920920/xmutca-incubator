@@ -9,36 +9,37 @@
 		<relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.xmutca</groupId>
-	<artifactId>xmutca-incubator-core-feign</artifactId>
+	<artifactId>xmutca-incubator-core-sentinel</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>xmutca-incubator-core-feign</name>
+	<name>xmutca-incubator-core-sentinel</name>
 
 	<dependencies>
+		<!-- feign支持 -->
 		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-core-common</artifactId>
+			<artifactId>xmutca-incubator-core-feign</artifactId>
 		</dependency>
 
-		<!-- feign -->
+		<!-- sentinel支持 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
-
-		<!-- 工具 -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
+			<artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
+			<groupId>com.alibaba.csp</groupId>
+			<artifactId>sentinel-datasource-nacos</artifactId>
+		</dependency>
+
+		<!-- webmvc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-core-logger</artifactId>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
 	</dependencies>
 </project>

@@ -77,7 +77,6 @@ public class DefaultExceptionHandler {
     /**
      * 文件上传不符合要求
      * @param ex
-     * @param request
      * @return
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -148,7 +147,6 @@ public class DefaultExceptionHandler {
     /**
      * 请求数据体为空
      * @param ex
-     * @param request
      * @return
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)

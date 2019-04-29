@@ -1,10 +1,16 @@
+1. 如果只是单纯的想用熔断保护功能，只需开启以下配置
+feign:
+  hystrix:
+    enabled: false
+  sentinel:
+    enabled: true
+    
+2. 如果想接入控制台, 加入了动态配置
 spring:
   application:
     name: xmutca-incubator-example-consumer
   cloud:
     nacos:
-      discovery:
-        server_addr: localhost:8848
       config:
         server_addr: localhost:8848
         file_extension: yml

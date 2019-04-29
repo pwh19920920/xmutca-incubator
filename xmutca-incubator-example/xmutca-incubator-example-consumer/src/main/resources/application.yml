@@ -24,14 +24,10 @@ logging:
   level:
     com.xmutca: info
 
+
 spring:
   boot:
     admin:
       client:
         username: root
         password: root
-  cloud:
-    sentinel:
-      eager: true
-      transport:
-        dashboard: localhost:8080

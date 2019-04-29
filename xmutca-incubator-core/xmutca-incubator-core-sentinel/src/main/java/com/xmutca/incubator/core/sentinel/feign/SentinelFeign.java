@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.xmutca.incubator.core.feign.sentinel;
+package com.xmutca.incubator.core.sentinel.feign;
 
 import feign.Contract;
 import feign.Feign;

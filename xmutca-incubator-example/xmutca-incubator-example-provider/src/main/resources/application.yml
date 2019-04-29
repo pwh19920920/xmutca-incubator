@@ -19,7 +19,6 @@ feign:
   sentinel:
     enabled: true
 
-
 logging:
   file: logs/${spring.application.name}-log
   level:
@@ -29,9 +28,5 @@ spring:
   boot:
     admin:
       client:
-        url: http://localhost:8686
-  cloud:
-    sentinel:
-      eager: true
-      transport:
-        dashboard: localhost:8080
+        username: root
+        password: root

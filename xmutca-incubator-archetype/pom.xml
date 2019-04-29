@@ -43,7 +43,7 @@
 
 		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-starter-feign</artifactId>
+			<artifactId>xmutca-incubator-starter-sentinel</artifactId>
 		</dependency>
 
 		<dependency>

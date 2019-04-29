@@ -85,7 +85,7 @@ spring:
         - name: Retry
           args:
             retries: 3
-            statuses: BAD_GATEWAY
+            statuses: REQUEST_TIMEOUT, BAD_GATEWAY
             methods: GET, DELETE, PUT #只有幂等的才允许重试
       loadbalancer:
         use404: true # 意思是如果服务不存在，默认返回的是503，此功能开关代表返回的是404

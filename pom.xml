@@ -38,11 +38,13 @@
 		<xmutca-incubator-core-lang.version>0.0.1-SNAPSHOT</xmutca-incubator-core-lang.version>
 		<xmutca-incubator-core-cache.version>0.0.1-SNAPSHOT</xmutca-incubator-core-cache.version>
 		<xmutca-incubator-core-sequence.version>0.0.1-SNAPSHOT</xmutca-incubator-core-sequence.version>
+		<xmutca-incubator-core-sentinel.version>0.0.1-SNAPSHOT</xmutca-incubator-core-sentinel.version>
 		<xmutca-incubator-starter-web.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-web.version>
 		<xmutca-incubator-starter-feign.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-feign.version>
 		<xmutca-incubator-starter-xxl-job.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-xxl-job.version>
 		<xmutca-incubator-archetype.version>0.0.1-SNAPSHOT</xmutca-incubator-archetype.version>
 		<xmutca-incubator-starter-sequence.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-sequence.version>
+		<xmutca-incubator-starter-sentinel.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-sentinel.version>
 	</properties>
 
 	<modules>
@@ -223,6 +225,12 @@
 				<version>${xmutca-incubator-core-sequence.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-core-sentinel</artifactId>
+				<version>${xmutca-incubator-core-sentinel.version}</version>
+			</dependency>
+
 			<!-- starter -->
 			<dependency>
 				<groupId>com.xmutca</groupId>
@@ -246,6 +254,12 @@
 				<groupId>com.xmutca</groupId>
 				<artifactId>xmutca-incubator-starter-sequence</artifactId>
 				<version>${xmutca-incubator-starter-sequence.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-starter-sentinel</artifactId>
+				<version>${xmutca-incubator-starter-sentinel.version}</version>
 			</dependency>
 
 			<dependency>

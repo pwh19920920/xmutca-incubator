@@ -14,5 +14,6 @@
 		<module>xmutca-incubator-starter-feign</module>
 		<module>xmutca-incubator-starter-xxl-job</module>
 		<module>xmutca-incubator-starter-sequence</module>
+		<module>xmutca-incubator-starter-sentinel</module>
 	</modules>
 </project>

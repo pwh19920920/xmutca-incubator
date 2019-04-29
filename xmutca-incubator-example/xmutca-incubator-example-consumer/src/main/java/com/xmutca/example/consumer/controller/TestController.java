@@ -2,6 +2,8 @@ package com.xmutca.example.consumer.controller;
 
 import com.xmutca.example.consumer.feign.ProviderFeign;
 import com.xmutca.incubator.core.common.response.Receipt;
+import jodd.http.HttpRequest;
+import jodd.http.HttpResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,5 +42,12 @@ public class TestController {
     public Receipt testId(@PathVariable String id, HttpServletRequest request) {
         log.info("consumer test request:{}", id);
         return new Receipt(id);
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i < 10000; i++) {
+            HttpResponse resp = HttpRequest.get(String.format("http://localhost:9898/test/%s", i)).send();
+            System.out.println(resp.bodyText());
+        }
     }
 }
