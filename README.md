@@ -1,5 +1,19 @@
 # xmutca-incubator
 
+一、鉴权处理方案
+1. 网关层利用gateway的断言以及过滤器进行鉴权, 对上游服务其他传递用户信息
+2. 利用feign拦截器，进行用户信息的续传
+3. 将当前用户模拟成session对象处理
+
+二、整体架构方案
+1. 链路追踪采用SkyWalking
+2. 注册中心采用阿里巴巴的Nacos
+3. 断路器采用阿里巴巴的Sentinel
+4. 分布式任务调度采用xxl-job
+5. 服务管理采用Spring-boot-admin
+6. 服务基于Spring Cloud Greenwich.SR1
+7. 分布式id采用雪花算法实现
+
 -------
 日志收集考虑使用有赞的方式操作
 https://shaozi.info/p/57222793944c1f684c52d450
