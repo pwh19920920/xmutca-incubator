@@ -51,7 +51,7 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
         }
 
         // 默认异常处理
-        return putAttr2Result(result, HttpStatus.INTERNAL_SERVER_ERROR.value(), "sorry, unknown error has occurred!");
+        return putAttr2Result(result, status.value(), status.getReasonPhrase());
     }
 
     /**

@@ -53,8 +53,7 @@ public class AuthorizeGatewayFilterFactory extends AbstractGatewayFilterFactory<
 
             // 获取用户的权限判断
             List<String> authorities = Lists.newArrayList();
-            String authorizeCode = exchange.getRequest().getHeaders().getFirst(config.getAuthorizeKey());
-            if (!authorities.contains(authorizeCode)) {
+            if (!authorities.contains(config.getAuthorizeCode())) {
                 return ResultUtils.build403Result(exchange);
             }
             return chain.filter(exchange);
