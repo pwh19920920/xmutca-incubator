@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.server.ServerRequest;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -38,33 +37,39 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
     public Map<String, Object> getErrorAttributes(ServerRequest request, boolean includeStackTrace) {
         Map<String, Object> result = super.getErrorAttributes(request, includeStackTrace);
         Throwable error = getError(request);
-        if (error instanceof ResponseStatusException) {
-            ResponseStatusException ex = ((ResponseStatusException) error);
-            if (ex.getStatus() == HttpStatus.NOT_FOUND) {
-                return putAttr2Result(result, ex.getStatus().value(), "sorry, page is lost!");
-            }
+        HttpStatus status = getHttpStatus(result);
 
-            if (ex.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR) {
-                return putAttr2Result(result, ex.getStatus().value(), "sorry, unknown error has occurred!");
-            }
-        }
-
+        // 通用异常处理
         if (error instanceof BaseException) {
             BaseException ex = ((BaseException) error);
             return putAttr2Result(result, ex.getStatus(), ex.getMessage());
         }
 
-        if (null == error.getCause()) {
-            return result;
+        // 本地异常处理
+        if (status == HttpStatus.NOT_FOUND) {
+            return putAttr2Result(result, HttpStatus.NOT_FOUND.value(), "sorry, page is lost!");
         }
 
-        return putAttr2Result(result);
+        // 默认异常处理
+        return putAttr2Result(result, HttpStatus.INTERNAL_SERVER_ERROR.value(), "sorry, unknown error has occurred!");
     }
 
-    private Map<String, Object> putAttr2Result(Map<String, Object> result) {
-        return putAttr2Result(result, 500, "sorry, unknown error has occurred!");
+    /**
+     * 根据code获取对应的HttpStatus
+     * @param errorAttributes
+     */
+    protected HttpStatus getHttpStatus(Map<String, Object> errorAttributes) {
+        int statusCode = (int) errorAttributes.get("status");
+        return HttpStatus.valueOf(statusCode);
     }
 
+    /**
+     * 异常包装
+     * @param result
+     * @param status
+     * @param message
+     * @return
+     */
     private Map<String, Object> putAttr2Result(Map<String, Object> result, int status, String message) {
         result.put("status", status);
         result.put("message", message);

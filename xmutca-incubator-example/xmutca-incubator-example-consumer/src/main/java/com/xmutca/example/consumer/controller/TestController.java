@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Random;
 
 /**
  * @version Revision: 0.0.1
@@ -26,6 +27,8 @@ public class TestController {
     @NonNull
     private ProviderFeign providerFeign;
 
+    Random random = new Random();
+
     @RequestMapping("/test")
     public Receipt test() {
         log.info("consumer test request");
@@ -39,8 +42,14 @@ public class TestController {
     }
 
     @RequestMapping("/test/{id}")
-    public Receipt testId(@PathVariable String id, HttpServletRequest request) {
-        log.info("consumer test request:{}", id);
+    public Receipt testId(@PathVariable String id, HttpServletRequest request) throws InterruptedException {
+        log.info("consumer test1 request:{}", id);
+        Thread.sleep(random.nextInt(1000));
+        log.info("consumer test2 request:{}", id);
+        Thread.sleep(random.nextInt(1000));
+        log.info("consumer test3 request:{}", id);
+        Thread.sleep(random.nextInt(1000));
+        log.info("consumer test4 request:{}", id);
         return new Receipt(id);
     }
 

@@ -4,9 +4,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server_addr: localhost:8848
+        server_addr: localhost:8888
       config:
-        server_addr: localhost:8848
+        server_addr: localhost:8888
         file_extension: yml
     sentinel:
       eager: true
