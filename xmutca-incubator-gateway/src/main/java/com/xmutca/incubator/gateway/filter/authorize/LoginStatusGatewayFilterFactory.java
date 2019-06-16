@@ -2,7 +2,7 @@ package com.xmutca.incubator.gateway.filter.authorize;
 
 import com.xmutca.incubator.core.common.constant.RequestConstant;
 import com.xmutca.incubator.core.common.response.Result;
-import com.xmutca.incubator.gateway.feign.SsoFeign;
+import com.xmutca.incubator.gateway.feign.PassportFeign;
 import com.xmutca.incubator.gateway.util.ResultUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class LoginStatusGatewayFilterFactory extends AbstractGatewayFilterFactory<LoginStatusGatewayFilterFactory.Config> implements Ordered {
 
     @Autowired
-    private SsoFeign ssoFeign;
+    private PassportFeign passportFeign;
 
     public LoginStatusGatewayFilterFactory() {
         super(Config.class);
@@ -32,7 +32,7 @@ public class LoginStatusGatewayFilterFactory extends AbstractGatewayFilterFactor
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             String token = exchange.getRequest().getHeaders().getFirst(RequestConstant.REQUEST_HEADER_TOKEN);
-            Result<String> result = ssoFeign.checkAndGetUserId(token);
+            Result<String> result = passportFeign.checkAndGetUserId(token);
             if (null == result.getData()) {
                 return ResultUtils.build401Result(exchange);
             }

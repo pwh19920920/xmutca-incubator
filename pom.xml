@@ -54,7 +54,8 @@
 		<module>xmutca-incubator-starters</module>
 		<module>xmutca-incubator-monitor</module>
 		<module>xmutca-incubator-auth</module>
-		<module>xmutca-incubator-sso</module>
+		<module>xmutca-incubator-passport</module>
+		<module>xmutca-incubator-member</module>
 		<module>xmutca-incubator-archetype</module>
 	</modules>
 

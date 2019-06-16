@@ -43,9 +43,9 @@ spring:
 
         - id: xmutca-incubator-sso
           # lb代表从注册中心获取服务，且已负载均衡方式转发
-          uri: lb://xmutca-incubator-sso
+          uri: lb://xmutca-incubator-passport
           predicates:
-            - Path=/sso/**
+            - Path=/passport/**
           filters:
             - StripPrefix=1
 
@@ -83,7 +83,7 @@ spring:
         use404: true # 意思是如果服务不存在，默认返回的是503，此功能开关代表返回的是404
 
 
-# hystrix 信号量隔离，3秒后自动超时
+# hystrix 信号量隔离，10秒后自动超时
 hystrix:
   command:
     default:
@@ -91,4 +91,4 @@ hystrix:
         isolation:
           strategy: SEMAPHORE
           thread:
-            timeoutInMilliseconds: 3000
+            timeoutInMilliseconds: 10000
