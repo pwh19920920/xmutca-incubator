@@ -15,11 +15,9 @@ spring:
           uri: lb://xmutca-incubator-example-consumer
           predicates:
             - Path=/consumer/consumer, /hello/consumer
-            - Header=X-Request-Id, xmutca-incubator-example-consumer-consumer
             - Method=GET
           filters:
             - StripPrefix=1
-            # - RewritePath=/consumer/(?<remaining>.*), /$\{remaining}
 
         - id: xmutca-incubator-example-consumer-test-id
           # lb代表从注册中心获取服务，且已负载均衡方式转发
@@ -27,13 +25,11 @@ spring:
           predicates:
             - Path=/consumer/test/{segment}
             - Method=GET
-           # - Header=X-Request-Id, xmutca-incubator-example-consumer-Id
           filters:
             - LoginStatus
             - name: Authorize
               args:
                 authorize_code: test
-                uri: /consumer/test/{key}
             - StripPrefix=1
 
         - id: xmutca-incubator-example-consumer-test
@@ -41,11 +37,9 @@ spring:
           uri: lb://xmutca-incubator-example-consumer
           predicates:
             - Path=/consumer/test
-            - Header=X-Request-Id, xmutca-incubator-example-consumer-test
             - Method=GET
           filters:
             - StripPrefix=1
-            - RewritePath=/consumer/(?<remaining>.*), /$\{remaining}
 
         - id: xmutca-incubator-sso
           # lb代表从注册中心获取服务，且已负载均衡方式转发
@@ -54,7 +48,6 @@ spring:
             - Path=/sso/**
           filters:
             - StripPrefix=1
-            - RewritePath=/sso/(?<remaining>.*), /$\{remaining}
 
         - id: xmutca-incubator-example-provider
           uri: lb://xmutca-incubator-example-provider
@@ -63,7 +56,6 @@ spring:
           filters:
             # 加上StripPrefix=1，否则转发到后端服务时会带上consumer前缀
             - StripPrefix=1
-            - RewritePath=/provider/(?<remaining>.*), /$\{remaining}
             - name: RateLimiter
               args:
                 key-resolver: '#{@limiterKeyResolver}' #用于限流的键的解析器的 Bean 对象的名字。它使用 SpEL 表达式根据#{@beanName}从 Spring 容器中获取 Bean 对象
