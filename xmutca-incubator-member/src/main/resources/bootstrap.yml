@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: xmutca-incubator-member
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8888
+      config:
+        server_addr: localhost:8888
+        file-extension: yml
+        shared-dataids: application.yml
+        refreshable-dataids: application.yml
