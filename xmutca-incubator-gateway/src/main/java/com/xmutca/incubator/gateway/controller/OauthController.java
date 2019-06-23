@@ -8,6 +8,7 @@ import com.xmutca.incubator.gateway.dto.TokenSecretDto;
 import com.xmutca.incubator.gateway.feign.PassportFeign;
 import com.xmutca.incubator.gateway.helper.JwtHelper;
 import com.xmutca.incubator.gateway.helper.OauthErrorHelper;
+import com.xmutca.incubator.gateway.service.TokenService;
 import com.xmutca.incubator.gateway.vo.TokenRequestVo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.SmartValidator;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -48,6 +46,9 @@ public class OauthController {
 
     @NonNull
     private GatewayProperties gatewayProperties;
+
+    @NonNull
+    private TokenService tokenService;
 
     /**
      * 令牌置换
@@ -96,6 +97,18 @@ public class OauthController {
 
         // 暂不支持
         return OauthErrorHelper.INVALID_REQUEST.getMonoResp();
+    }
+
+    /**
+     * 退出
+     * @param exchange
+     * @return
+     */
+    @PutMapping("/logout")
+    public Mono logout(ServerWebExchange exchange) {
+        TokenSecretDto dto = tokenService.checkAndGetTokenSecret(exchange.getRequest());
+        Result<Integer> result = passportFeign.logout(dto.getAccessTokenId());
+        return Mono.just(result);
     }
 
     /**
