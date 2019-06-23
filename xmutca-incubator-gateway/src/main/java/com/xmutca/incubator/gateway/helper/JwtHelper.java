@@ -76,11 +76,20 @@ public class JwtHelper {
      * @return
      */
     public static JwtData getDataFromAuthorization(String authorization) {
+        String token = getToken(authorization);
+        return getDataFromJwtToken(token);
+    }
+
+    /**
+     * 获取令牌
+     * @param authorization
+     * @return
+     */
+    public static String getToken(String authorization) {
         if (StringUtils.isBlank(authorization) || authorization.length() < TOKEN_TYPE.length() + 1) {
             throw new ServiceException("错误的令牌");
         }
-        String token = authorization.substring(TOKEN_TYPE.length() + 1);
-        return getDataFromJwtToken(token);
+        return authorization.substring(TOKEN_TYPE.length() + 1);
     }
 
     /**
@@ -107,7 +116,6 @@ public class JwtHelper {
      * 解析jwt处理
      * @param token
      * @param secret
-     * @param func
      * @return
      */
     public static String parseJwtHandler(String token, String secret) {

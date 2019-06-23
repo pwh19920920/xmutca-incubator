@@ -32,7 +32,8 @@ public class TokenService {
      * @return
      */
     public String checkAndGetSubject(ServerHttpRequest request) {
-        String token = request.getHeaders().getFirst(RequestConstant.REQUEST_HEADER_TOKEN);
+        String authorization = request.getHeaders().getFirst(RequestConstant.REQUEST_HEADER_TOKEN);
+        String token = JwtHelper.getToken(authorization);
         TokenSecretDto tokenSecretDto = checkAndGetTokenSecretDto(token, request);
 
         // 信息解密
@@ -45,7 +46,8 @@ public class TokenService {
      * @return
      */
     public TokenSecretDto checkAndGetTokenSecret(ServerHttpRequest request) {
-        String token = request.getHeaders().getFirst(RequestConstant.REQUEST_HEADER_TOKEN);
+        String authorization = request.getHeaders().getFirst(RequestConstant.REQUEST_HEADER_TOKEN);
+        String token = JwtHelper.getToken(authorization);
         TokenSecretDto tokenSecretDto = checkAndGetTokenSecretDto(token, request);
         JwtHelper.parseJwtHandler(token, tokenSecretDto.getAccessTokenSecret());
         return tokenSecretDto;

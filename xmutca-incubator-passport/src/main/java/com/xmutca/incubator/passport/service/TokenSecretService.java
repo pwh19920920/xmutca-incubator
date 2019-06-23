@@ -29,7 +29,7 @@ public class TokenSecretService {
      * @return
      */
     @CachePenetrationProtect
-    @Cached(expire = 600, localExpire = 120, cacheType = CacheType.BOTH, name="sso:access_token_id:", key = "#accessTokenId")
+    @Cached(expire = 600, localExpire = 120, cacheType = CacheType.BOTH, name="passport:access_token_id:", key = "#accessTokenId")
     @CacheRefresh(refresh = 120, stopRefreshAfterLastAccess = 600)
     public TokenSecret getByAccessTokenId(String accessTokenId) {
         return repository.getByAccessTokenId(accessTokenId);
@@ -41,7 +41,7 @@ public class TokenSecretService {
      * @return
      */
     @CachePenetrationProtect
-    @Cached(expire = 600, localExpire = 120, cacheType = CacheType.BOTH, name="sso:refresh_token_id:", key = "#refreshTokenId")
+    @Cached(expire = 600, localExpire = 120, cacheType = CacheType.BOTH, name="passport:refresh_token_id:", key = "#refreshTokenId")
     @CacheRefresh(refresh = 120, stopRefreshAfterLastAccess = 600)
     public TokenSecret getByRefreshTokenId(String refreshTokenId) {
         return repository.getByRefreshTokenId(refreshTokenId);
@@ -54,7 +54,7 @@ public class TokenSecretService {
      * @param tokenSecret
      * @return
      */
-    @CacheInvalidate(name="sso:access_token_id:", key = "#oldAccessTokenId")
+    @CacheInvalidate(name="passport:access_token_id:", key = "#oldAccessTokenId")
     public int updateAccessTokenIdAndSecret(String oldAccessTokenId, TokenSecret tokenSecret) {
         return repository.updateAccessTokenIdAndSecret(tokenSecret);
     }
@@ -74,8 +74,18 @@ public class TokenSecretService {
      * @param accessTokenId
      * @return
      */
-    @CacheInvalidate(name="sso:access_token_id:", key = "#accessTokenId")
+    @CacheInvalidate(name="passport:access_token_id:", key = "#accessTokenId")
     public int updateStatus(String accessTokenId) {
         return repository.updateStatus(accessTokenId);
+    }
+
+    /**
+     * 删除刷新令牌
+     * @param refreshTokenId
+     * @return
+     */
+    @CacheInvalidate(name="passport:refresh_token_id:", key = "#refreshTokenId")
+    public void dropRefreshToken(String refreshTokenId) {
+
     }
 }
