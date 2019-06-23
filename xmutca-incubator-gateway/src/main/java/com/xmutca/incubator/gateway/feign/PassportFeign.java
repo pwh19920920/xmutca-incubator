@@ -52,10 +52,11 @@ public interface PassportFeign {
     /**
      * 注销令牌
      * @param accessTokenId
+     * @param refreshTokenId
      * @return
      */
-    @DeleteMapping("/token/logout/{accessTokenId}")
-    Result<Integer> logout(@PathVariable("accessTokenId") String accessTokenId);
+    @DeleteMapping("/token/logout")
+    Result<Integer> logout(@RequestParam("accessTokenId") String accessTokenId, @RequestParam("refreshTokenId") String refreshTokenId);
 
     /**
      * 发布令牌

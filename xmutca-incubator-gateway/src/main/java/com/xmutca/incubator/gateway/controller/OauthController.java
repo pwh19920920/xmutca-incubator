@@ -107,7 +107,7 @@ public class OauthController {
     @PutMapping("/logout")
     public Mono logout(ServerWebExchange exchange) {
         TokenSecretDto dto = tokenService.checkAndGetTokenSecret(exchange.getRequest());
-        Result<Integer> result = passportFeign.logout(dto.getAccessTokenId());
+        Result<Integer> result = passportFeign.logout(dto.getAccessTokenId(), dto.getRefreshTokenId());
         return Mono.just(result);
     }
 

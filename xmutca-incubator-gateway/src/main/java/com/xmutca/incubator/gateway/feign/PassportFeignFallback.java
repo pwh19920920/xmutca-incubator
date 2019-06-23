@@ -35,7 +35,7 @@ public class PassportFeignFallback implements PassportFeign {
     }
 
     @Override
-    public Result<Integer> logout(String accessTokenId) {
+    public Result<Integer> logout(String accessTokenId, String refreshTokenId) {
         throw new ServiceException("删除令牌失败，请稍后再试！");
     }
 

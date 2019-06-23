@@ -6,6 +6,7 @@ import com.xmutca.incubator.passport.service.TokenSecretService;
 import com.xmutca.incubator.passport.vo.TokenSecretVo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -71,17 +72,17 @@ public class TokenSecretController {
     /**
      * 注销令牌
      * @param accessTokenId
+     * @param refreshTokenId
      * @return
      */
-    @DeleteMapping("/logout/{accessTokenId}")
-    public Result<Integer> logout(@PathVariable String accessTokenId) {
-        TokenSecret tokenSecret = tokenSecretService.getByAccessTokenId(accessTokenId);
-        if (null == tokenSecret) {
-            return new Result<>(HttpStatus.BAD_REQUEST.value(), "请求令牌有误");
+    @DeleteMapping("/logout")
+    public Result<Integer> logout(String accessTokenId, String refreshTokenId) {
+        if (StringUtils.isAnyEmpty(accessTokenId, refreshTokenId)) {
+            return new Result<>(HttpStatus.BAD_REQUEST.value(), "请求参数有误");
         }
 
         int result = tokenSecretService.updateStatus(accessTokenId);
-        tokenSecretService.dropRefreshToken(tokenSecret.getRefreshTokenId());
+        tokenSecretService.dropRefreshToken(refreshTokenId);
         return new Result<>(result);
     }
 }
