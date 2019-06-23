@@ -1,6 +1,6 @@
 package com.xmutca.incubator.gateway.filter.limiter;
 
-import com.xmutca.incubator.gateway.util.ResultUtils;
+import com.xmutca.incubator.gateway.helper.ResultHelper;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -79,7 +79,7 @@ public class RateLimiterGatewayFilterFactory extends RequestRateLimiterGatewayFi
                         return chain.filter(exchange);
                     }
 
-                    return ResultUtils.build429Result(exchange);
+                    return ResultHelper.build429Result(exchange);
                 });
             });
         };

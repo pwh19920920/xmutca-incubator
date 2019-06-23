@@ -40,6 +40,7 @@
 		<xmutca-incubator-core-sequence.version>0.0.1-SNAPSHOT</xmutca-incubator-core-sequence.version>
 		<xmutca-incubator-core-sentinel.version>0.0.1-SNAPSHOT</xmutca-incubator-core-sentinel.version>
 		<xmutca-incubator-starter-web.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-web.version>
+		<xmutca-incubator-starter-webflux.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-webflux.version>
 		<xmutca-incubator-starter-feign.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-feign.version>
 		<xmutca-incubator-starter-xxl-job.version>0.0.1-SNAPSHOT</xmutca-incubator-starter-xxl-job.version>
 		<xmutca-incubator-archetype.version>0.0.1-SNAPSHOT</xmutca-incubator-archetype.version>
@@ -237,6 +238,12 @@
 				<groupId>com.xmutca</groupId>
 				<artifactId>xmutca-incubator-starter-web</artifactId>
 				<version>${xmutca-incubator-starter-web.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.xmutca</groupId>
+				<artifactId>xmutca-incubator-starter-webflux</artifactId>
+				<version>${xmutca-incubator-starter-webflux.version}</version>
 			</dependency>
 
 			<dependency>

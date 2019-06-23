@@ -3,6 +3,7 @@ package com.xmutca.incubator.core.webflux.config;
 import com.xmutca.incubator.core.common.exception.BaseException;
 import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
+import feign.RetryableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.server.ServerWebExchange;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -35,9 +37,9 @@ public class DefaultExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = BaseException.class)
-    public Receipt handleBaseException(BaseException ex, ServerRequest request) {
+    public Receipt handleBaseException(BaseException ex, ServerWebExchange exchange) {
         Receipt result = ex.getExceptionResult();
-        request.exchange().getResponse().setStatusCode(HttpStatus.valueOf(result.getStatus()));
+        exchange.getResponse().setStatusCode(HttpStatus.valueOf(result.getStatus()));
         return result;
     }
 
@@ -61,6 +63,17 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(value = {MultipartException.class})
     public Receipt handleMultipartException(MultipartException ex) {
         return new Receipt(HttpStatus.BAD_REQUEST.value(), "文件不符合要求");
+    }
+
+    /**
+     * 重试失败
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(RetryableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Receipt handleRetryableException(RetryableException ex) {
+        return new Receipt(HttpStatus.REQUEST_TIMEOUT.value(), "请求超时");
     }
 
     /**

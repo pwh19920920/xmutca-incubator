@@ -2,7 +2,7 @@ package com.xmutca.incubator.gateway.filter.authorize;
 
 import com.google.common.collect.Lists;
 import com.xmutca.incubator.core.common.constant.RequestConstant;
-import com.xmutca.incubator.gateway.util.ResultUtils;
+import com.xmutca.incubator.gateway.helper.ResultHelper;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -37,13 +37,13 @@ public class AuthorizeGatewayFilterFactory extends AbstractGatewayFilterFactory<
             // 此路径无需登陆
             String user = exchange.getRequest().getHeaders().getFirst(RequestConstant.REQUEST_HEADER_USER);
             if (StringUtils.isBlank(user)) {
-                return ResultUtils.build401Result(exchange);
+                return ResultHelper.build401Result(exchange);
             }
 
             // 获取用户的权限判断
             List<String> authorities = Lists.newArrayList();
             if (!authorities.contains(config.getAuthorizeCode())) {
-                return ResultUtils.build403Result(exchange);
+                return ResultHelper.build403Result(exchange);
             }
             return chain.filter(exchange);
         };

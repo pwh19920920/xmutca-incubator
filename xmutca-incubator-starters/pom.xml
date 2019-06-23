@@ -11,6 +11,7 @@
 
 	<modules>
 		<module>xmutca-incubator-starter-web</module>
+		<module>xmutca-incubator-starter-webflux</module>
 		<module>xmutca-incubator-starter-feign</module>
 		<module>xmutca-incubator-starter-xxl-job</module>
 		<module>xmutca-incubator-starter-sequence</module>

@@ -1,7 +1,7 @@
 package com.xmutca.incubator.gateway.filter.protect;
 
 import cn.hutool.crypto.digest.DigestUtil;
-import com.xmutca.incubator.gateway.util.ResultUtils;
+import com.xmutca.incubator.gateway.helper.ResultHelper;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -37,18 +37,18 @@ public class ProtectGatewayFilterFactory extends AbstractGatewayFilterFactory<Pr
 
             // 判断空值
             if (StringUtils.isAnyEmpty(nonce, timestamp, signature)) {
-                return ResultUtils.build400Result(exchange, "gateway tip, bad request");
+                return ResultHelper.build400Result(exchange, "gateway tip, bad request");
             }
 
             // 超时判断
             if (checkTimeout(timestamp, config)) {
-                return ResultUtils.build400Result(exchange, "gateway tip, request timeout");
+                return ResultHelper.build400Result(exchange, "gateway tip, request timeout");
             }
 
             // 签名判断
             String sign = DigestUtil.md5Hex(requestUri + nonce + timestamp);
             if (!sign.equals(signature)) {
-                return ResultUtils.build400Result(exchange, "gateway tip, sign error");
+                return ResultHelper.build400Result(exchange, "gateway tip, sign error");
             }
             return chain.filter(exchange);
         };

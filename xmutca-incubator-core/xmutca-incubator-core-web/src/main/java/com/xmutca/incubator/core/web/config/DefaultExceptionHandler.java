@@ -5,6 +5,7 @@ import com.xmutca.incubator.core.common.exception.BaseException;
 import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
 import com.xmutca.incubator.core.logger.message.ExceptionLoggerMessage;
+import feign.RetryableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -47,6 +48,17 @@ public class DefaultExceptionHandler {
         Receipt result = ex.getExceptionResult();
         response.setStatus(result.getStatus());
         return result;
+    }
+
+    /**
+     * 重试失败
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(RetryableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Receipt handleRetryableException(RetryableException ex) {
+        return new Receipt(HttpStatus.REQUEST_TIMEOUT.value(), "请求超时");
     }
 
     /**

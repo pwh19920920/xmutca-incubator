@@ -1,6 +1,7 @@
 package com.xmutca.incubator.gateway.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.config.GatewayProperties;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,21 +15,15 @@ import java.util.List;
  * @author: weihuang.peng
  * @Date: 2019-04-09
  */
+@RequiredArgsConstructor
 @RestController
 public class GatewayController {
 
-    @Autowired
+    @NonNull
     private GatewayProperties gatewayProperties;
 
     @GetMapping("/gateway")
     public Mono<List<RouteDefinition>> proxy() throws Exception {
         return Mono.just(gatewayProperties.getRoutes());
     }
-
-    /**
-     * 1. save route主体
-     * 2. save filter
-     * 3. save predicate
-     */
-
 }

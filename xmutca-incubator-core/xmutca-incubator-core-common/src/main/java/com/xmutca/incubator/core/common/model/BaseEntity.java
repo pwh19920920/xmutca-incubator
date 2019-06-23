@@ -1,5 +1,6 @@
 package com.xmutca.incubator.core.common.model;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,4 +40,9 @@ public class BaseEntity implements Serializable {
      * 更新用户
      */
     private Long updatePerson;
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 }
