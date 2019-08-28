@@ -24,6 +24,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * CommonFilter
  * @author weihuang.peng
  */
 @Aspect
