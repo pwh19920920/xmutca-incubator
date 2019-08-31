@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xmutca.incubator.auth.modules.gateway.repository.RouteDefinitionRepository">
+    <resultMap id="resultMap" type="com.xmutca.incubator.auth.modules.gateway.model.RouteDefinition">
+        <result column="id" property="id"/>
+        <result column="route_id" property="routeId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="uri" property="uri"/>
+        <result column="predicates" property="predicates" typeHandler="com.xmutca.incubator.core.mybatis.handler.ListToJsonHandler"/>
+        <result column="filters" property="filters" typeHandler="com.xmutca.incubator.core.mybatis.handler.ListToJsonHandler"/>
+        <result column="status" property="status" typeHandler="com.xmutca.incubator.core.mybatis.handler.DefaultEnumHandler"/>
+    </resultMap>
+
+    <sql id="columns">
+         route_id, predicates, filters, status, uri, create_time, update_time
+    </sql>
+
+    <insert id="save">
+        insert gateway_route_definition(id, uri, route_id, predicates, filters, status)
+        values(#{id}, #{uri}, #{routeId}, #{predicates, typeHandler=com.xmutca.incubator.core.mybatis.handler.ListToJsonHandler}, #{filters, typeHandler=com.xmutca.incubator.core.mybatis.handler.ListToJsonHandler}, #{status, typeHandler=com.xmutca.incubator.core.mybatis.handler.DefaultEnumHandler})
+    </insert>
+
+    <select id="listForTimeAfter" resultMap="resultMap">
+        select <include refid="columns"/>
+        from gateway_route_definition
+        where update_time >= #{updateTime}
+    </select>
+</mapper>
