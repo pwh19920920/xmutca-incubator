@@ -2,6 +2,8 @@ package com.xmutca.incubator.core.mybatis.handler;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedJdbcTypes;
+import org.apache.ibatis.type.MappedTypes;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -15,6 +17,8 @@ import java.util.Map;
  * 封装通用的mybatis枚举映射处理器
  * @author Peter
  */
+@MappedTypes({Enum.class})
+@MappedJdbcTypes({JdbcType.VARCHAR})
 public class CommonEnumHandler extends BaseTypeHandler<Enum> {
 
     private Map<Integer, Enum> enumMap;

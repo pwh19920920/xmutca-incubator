@@ -1,8 +1,10 @@
 package com.xmutca.incubator.core.webflux.config;
 
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import com.xmutca.incubator.core.common.exception.BaseException;
 import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
+import com.xmutca.incubator.core.logger.message.ExceptionLoggerMessage;
 import feign.RetryableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -55,6 +57,20 @@ public class DefaultExceptionHandler {
     }
 
     /**
+     * 请求超时或发生业务熔断失败
+     * @return
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {HystrixRuntimeException.class})
+    public Receipt handleHystrixRuntimeException(HystrixRuntimeException ex, ServerWebExchange exchange) {
+        if (ex.getFallbackException().getCause().getCause() instanceof BaseException) {
+            BaseException baseEx = (BaseException) ex.getFallbackException().getCause().getCause();
+            return handleBaseException(baseEx, exchange);
+        }
+        return new Receipt(HttpStatus.BAD_REQUEST.value(), "请求超时或发生业务熔断");
+    }
+
+    /**
      * 文件上传不符合要求
      * @param ex
      * @return
@@ -84,7 +100,7 @@ public class DefaultExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
     public Receipt handleNumberFormatException(MethodArgumentTypeMismatchException ex) {
-        return new Receipt(HttpStatus.BAD_REQUEST.value(), "您当前访问路径已被篡改,请填写正确路径");
+        return new Receipt(HttpStatus.BAD_REQUEST.value(), "参数不匹配,请填写正确路径");
     }
 
     /**

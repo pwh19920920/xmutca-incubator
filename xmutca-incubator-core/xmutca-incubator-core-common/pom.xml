@@ -29,9 +29,9 @@
 			<!--<artifactId>hystrix-core</artifactId>-->
 		<!--</dependency>-->
 
-		<dependency>
-			<groupId>com.alibaba.csp</groupId>
-			<artifactId>sentinel-core</artifactId>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.alibaba.csp</groupId>-->
+			<!--<artifactId>sentinel-core</artifactId>-->
+		<!--</dependency>-->
 	</dependencies>
 </project>

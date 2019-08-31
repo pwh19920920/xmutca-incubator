@@ -1,6 +1,7 @@
 package com.xmutca.incubator.core.web.config;
 
 import com.alibaba.fastjson.JSONException;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import com.xmutca.incubator.core.common.exception.BaseException;
 import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.server.ServerWebExchange;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,6 +50,20 @@ public class DefaultExceptionHandler {
         Receipt result = ex.getExceptionResult();
         response.setStatus(result.getStatus());
         return result;
+    }
+
+    /**
+     * 请求超时或发生业务熔断失败
+     * @return
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {HystrixRuntimeException.class})
+    public Receipt handleHystrixRuntimeException(HystrixRuntimeException ex, HttpServletResponse response) {
+        if (ex.getFallbackException().getCause().getCause() instanceof BaseException) {
+            BaseException baseEx = (BaseException) ex.getFallbackException().getCause().getCause();
+            return handleBaseException(baseEx, response);
+        }
+        return new Receipt(HttpStatus.BAD_REQUEST.value(), "请求超时或发生业务熔断");
     }
 
     /**
@@ -106,8 +122,8 @@ public class DefaultExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
     public Receipt handleNumberFormatException(MethodArgumentTypeMismatchException ex) {
-        ExceptionLoggerMessage.getInstance(ex,"访问路径被篡改", ex).info(log);
-        return new Receipt(HttpStatus.BAD_REQUEST.value(), "您当前访问路径已被篡改,请填写正确路径");
+        ExceptionLoggerMessage.getInstance(ex,"参数不匹配", ex).info(log);
+        return new Receipt(HttpStatus.BAD_REQUEST.value(), "参数不匹配,请填写正确路径");
     }
 
     /**

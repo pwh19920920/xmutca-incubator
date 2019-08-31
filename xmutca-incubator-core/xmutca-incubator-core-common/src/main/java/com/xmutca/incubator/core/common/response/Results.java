@@ -32,5 +32,9 @@ public class Results<T> extends Result<Collection<T>> {
         super(message);
     }
 
+    public Results(Collection<T> data) {
+        this(DEFAULT_STATUS, null, data);
+    }
+
     public Results() {}
 }

@@ -28,5 +28,15 @@
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-core</artifactId>
         </dependency>
-    </dependencies>
+
+		<dependency>
+            <groupId>com.netflix.hystrix</groupId>
+            <artifactId>hystrix-core</artifactId>
+        </dependency>
+
+		<dependency>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-core-logger</artifactId>
+		</dependency>
+	</dependencies>
 </project>
