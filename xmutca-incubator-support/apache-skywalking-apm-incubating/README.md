@@ -7,7 +7,7 @@
 # 二. 使用方法
 1. 下载于版本相对应的agent
 
-下载地址：https://www.apache.org/dyn/closer.cgi/incubator/skywalking/6.0.0-GA/apache-skywalking-apm-incubating-6.0.0-GA.tar.gz
+下载地址：https://www.apache.org/dyn/closer.cgi/incubator/skywalking/6.3.0/apache-skywalking-apm-incubating-6.3.0.tar.gz
 
 2. 解压文件
 
@@ -28,3 +28,4 @@ https://github.com/apache/incubator-skywalking/blob/master/docs/en/setup/service
 ```
 java -javaagent:/Users/qudian/Develop/apache-skywalking-apm-incubating/agent/skywalking-agent.jar -Dskywalking.agent.service_name=example-provdier -jar example-provider.jar
 ```
+

@@ -25,8 +25,9 @@ services:
       - 9300:9300
     environment:
       discovery.type: single-node
+      ES_JAVA_OPTS: '-Xms512m -Xmx512m'
   oap:
-    image: apache/skywalking-oap-server:6.0.0-GA
+    image: apache/skywalking-oap-server:6.3.0
     container_name: oap
     depends_on:
       - elasticsearch
@@ -38,8 +39,10 @@ services:
       - 12800:12800
     volumes:
       - ./config:/apache-skywalking-apm-incubating/config:ro
+    environment:
+      TZ: Asia/Shanghai #设定东八区的城市，防止Oap记录数据时用0时区
   ui:
-    image: apache/skywalking-ui:6.0.0-GA
+    image: apache/skywalking-ui:6.3.0
     container_name: ui
     depends_on:
       - oap
@@ -50,3 +53,4 @@ services:
       - 8080:8080
     environment:
       collector.ribbon.listOfServers: oap:12800
+      TZ: Asia/Shanghai
