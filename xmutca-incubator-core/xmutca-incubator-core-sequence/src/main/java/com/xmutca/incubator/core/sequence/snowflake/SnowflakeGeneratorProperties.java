@@ -13,20 +13,24 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("system.generator.snowflake")
 public class SnowflakeGeneratorProperties {
 
-    private final static long MAX_WORKER_DATA_CENTER = 31;
+    public static final long MAX_WORKER_DATA_CENTER = 15;
 
-    private final static long MIN_WORKER_DATA_CENTER = 0;
+    public static final long MIN_WORKER_DATA_CENTER = 0;
 
-    private long workerId;
+    public static final long MAX_WORKER_ID = 63;
 
-    private long dataCenterId;
+    public static final long MIN_WORKER_ID = 0;
+
+    private long workerId = MIN_WORKER_ID;
+
+    private long dataCenterId = MIN_WORKER_DATA_CENTER;
 
     public long getWorkerId() {
         return workerId;
     }
 
     public void setWorkerId(long workerId) {
-        if (workerId <= MAX_WORKER_DATA_CENTER && workerId >= MIN_WORKER_DATA_CENTER) {
+        if (workerId <= MAX_WORKER_ID && workerId >= MIN_WORKER_ID) {
             this.workerId = workerId;
         }
     }

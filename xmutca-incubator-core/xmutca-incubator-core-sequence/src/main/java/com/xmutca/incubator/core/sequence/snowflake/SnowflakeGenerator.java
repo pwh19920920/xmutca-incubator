@@ -13,10 +13,10 @@ import java.util.stream.LongStream;
  */
 public class SnowflakeGenerator implements Generator {
 
-    private Sequence sequence;
+    private Snowflake sequence;
 
     public SnowflakeGenerator(SnowflakeGeneratorProperties properties) {
-        this.sequence = new Sequence(properties.getWorkerId(), properties.getDataCenterId());
+        this.sequence = new Snowflake(properties.getWorkerId(), properties.getDataCenterId());
     }
 
     @Override
