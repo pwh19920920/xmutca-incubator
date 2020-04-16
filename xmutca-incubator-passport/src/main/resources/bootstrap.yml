@@ -4,9 +4,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8888
+        server-addr: localhost:8848
       config:
-        server_addr: localhost:8888
+        server_addr: localhost:8848
         file-extension: yml
         shared-dataids: application.yml
         refreshable-dataids: application.yml

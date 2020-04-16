@@ -40,5 +40,10 @@
 			<groupId>com.xmutca</groupId>
 			<artifactId>xmutca-incubator-core-logger</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.netflix.hystrix</groupId>
+			<artifactId>hystrix-core</artifactId>
+		</dependency>
 	</dependencies>
 </project>

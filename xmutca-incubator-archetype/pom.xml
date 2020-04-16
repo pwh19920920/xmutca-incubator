@@ -27,12 +27,12 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
+			<groupId>com.alibaba.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
+			<groupId>com.alibaba.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
 		</dependency>
 
@@ -41,9 +41,10 @@
 			<artifactId>xmutca-incubator-starter-web</artifactId>
 		</dependency>
 
+		<!-- feign支持 -->
 		<dependency>
 			<groupId>com.xmutca</groupId>
-			<artifactId>xmutca-incubator-starter-sentinel</artifactId>
+			<artifactId>xmutca-incubator-core-feign</artifactId>
 		</dependency>
 
 		<dependency>

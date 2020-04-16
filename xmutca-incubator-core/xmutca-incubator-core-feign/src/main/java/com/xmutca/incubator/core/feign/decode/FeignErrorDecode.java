@@ -1,6 +1,7 @@
 package com.xmutca.incubator.core.feign.decode;
 
 import com.alibaba.fastjson.JSON;
+import com.netflix.hystrix.exception.HystrixBadRequestException;
 import com.xmutca.incubator.core.common.exception.BaseException;
 import com.xmutca.incubator.core.common.response.Result;
 import feign.Response;
@@ -21,7 +22,8 @@ public class FeignErrorDecode implements ErrorDecoder {
         if (response.status() >= HttpStatus.BAD_REQUEST.value() && response.status() < HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             try {
                 Result receipt = JSON.parseObject(Util.toString(response.body().asReader()), Result.class);
-                return BaseException.getInstance(receipt);
+                BaseException ex = BaseException.getInstance(receipt);
+                return new HystrixBadRequestException(ex.getMessage(), ex);
             } catch (Exception e) {
                 // TODO FeignErrorDecode业务异常反解失败
             }

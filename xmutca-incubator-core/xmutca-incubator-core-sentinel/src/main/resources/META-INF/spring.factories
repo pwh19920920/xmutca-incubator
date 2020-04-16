@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.xmutca.incubator.core.sentinel.SentinelAutoConfiguration

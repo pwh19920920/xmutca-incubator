@@ -14,8 +14,6 @@ management:
 
 feign:
   hystrix:
-    enabled: false
-  sentinel:
     enabled: true
 
 

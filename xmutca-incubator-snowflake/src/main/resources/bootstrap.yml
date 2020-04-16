@@ -1,6 +1,6 @@
 spring:
   application:
-    name: xmutca-incubator-auth
+    name: xmutca-incubator-snowflake
   cloud:
     nacos:
       discovery:

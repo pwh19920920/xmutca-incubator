@@ -9,61 +9,45 @@
 		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.xmutca</groupId>
-	<artifactId>xmutca-incubator-monitor</artifactId>
+	<artifactId>xmutca-incubator-snowflake</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>xmutca-incubator-monitor</name>
+	<name>xmutca-incubator-snowflake</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-archetype</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-starter-sequence</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<!-- util -->
+		<dependency>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-core-lang</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>com.alibaba.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-core-lock</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>com.alibaba.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-starter-xxl-job</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-server</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.cloud</groupId>
-					<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.hazelcast</groupId>
-			<artifactId>hazelcast</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jolokia</groupId>
-			<artifactId>jolokia-core</artifactId>
+			<groupId>com.xmutca</groupId>
+			<artifactId>xmutca-incubator-starter-sequence</artifactId>
 		</dependency>
 	</dependencies>
 

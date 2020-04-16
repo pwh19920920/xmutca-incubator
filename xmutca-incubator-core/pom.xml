@@ -21,6 +21,5 @@
 		<module>xmutca-incubator-core-sequence</module>
 		<module>xmutca-incubator-core-cache</module>
 		<module>xmutca-incubator-core-lock</module>
-		<module>xmutca-incubator-core-sentinel</module>
 	</modules>
 </project>

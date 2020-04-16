@@ -27,6 +27,7 @@ public class RedisDistributeLock implements DistributeLock {
      * @param val
      * @return
      */
+    @Override
     public boolean tryGetDistributedLock(String key, String val, long timeout, TimeUnit unit) {
         try {
             return redisTemplate.opsForValue().setIfAbsent(key, val, timeout, unit);
@@ -42,6 +43,7 @@ public class RedisDistributeLock implements DistributeLock {
      * @param val
      * @return
      */
+    @Override
     public boolean releaseDistributedLock(String key, String val) {
         String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
         Object result = redisTemplate.execute((RedisConnection connection) -> connection.eval(
