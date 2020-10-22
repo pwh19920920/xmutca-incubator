@@ -57,7 +57,6 @@
 		<module>xmutca-incubator-passport</module>
 		<module>xmutca-incubator-member</module>
 		<module>xmutca-incubator-archetype</module>
-		<module>xmutca-incubator-snowflake</module>
 	</modules>
 
 	<!-- 管理依赖版本号,子项目不会默认依赖 -->

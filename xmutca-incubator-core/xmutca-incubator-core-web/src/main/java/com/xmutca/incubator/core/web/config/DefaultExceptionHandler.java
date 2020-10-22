@@ -1,6 +1,7 @@
 package com.xmutca.incubator.core.web.config;
 
 import com.alibaba.fastjson.JSONException;
+import com.netflix.hystrix.exception.HystrixBadRequestException;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
 import com.xmutca.incubator.core.common.exception.BaseException;
 import com.xmutca.incubator.core.common.response.Receipt;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
-import org.springframework.web.server.ServerWebExchange;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,6 +62,20 @@ public class DefaultExceptionHandler {
         if (ex.getFallbackException().getCause().getCause() instanceof BaseException) {
             BaseException baseEx = (BaseException) ex.getFallbackException().getCause().getCause();
             return handleBaseException(baseEx, response);
+        }
+        return new Receipt(HttpStatus.BAD_REQUEST.value(), "请求超时或发生业务熔断");
+    }
+
+    /**
+     * 请求超时或发生业务熔断失败
+     * @return
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {HystrixBadRequestException.class})
+    public Receipt handleHystrixBadRequestException(HystrixBadRequestException ex, HttpServletResponse exchange) {
+        if (ex.getCause() instanceof BaseException) {
+            BaseException baseEx = (BaseException) ex.getCause();
+            return handleBaseException(baseEx, exchange);
         }
         return new Receipt(HttpStatus.BAD_REQUEST.value(), "请求超时或发生业务熔断");
     }

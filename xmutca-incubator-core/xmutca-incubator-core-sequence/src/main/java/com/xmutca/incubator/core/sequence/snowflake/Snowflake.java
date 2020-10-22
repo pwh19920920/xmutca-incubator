@@ -45,24 +45,24 @@ public final class Snowflake {
      **/
     public static final long START_TIME = 1519740777809L;
     /**
-     * dataCenterId占用的位数：3
+     * dataCenterId占用的位数：2
      **/
-    public static final long DATA_CENTER_ID_BITS = 3L;
+    public static final long DATA_CENTER_ID_BITS = 2L;
     /**
-     * workerId占用的位数：7
+     * workerId占用的位数：8
      **/
-    public static final long WORKER_ID_BITS = 7L;
+    public static final long WORKER_ID_BITS = 8L;
     /**
      * 序列号占用的位数：12（表示只允许workId的范围为：0-4095）
      **/
     public static final long SEQUENCE_BITS = 12L;
 
     /**
-     * workerId可以使用范围：0-7
+     * workerId可以使用范围：0-255
      **/
     public static final long MAX_WORKER_ID = ~(-1L << WORKER_ID_BITS);
     /**
-     * dataCenterId可以使用范围：0-127
+     * dataCenterId可以使用范围：0-3
      **/
     public static final long MAX_DATA_CENTER_ID = ~(-1L << DATA_CENTER_ID_BITS);
 
@@ -247,5 +247,9 @@ public final class Snowflake {
         }
 
         return lastIp;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(0x000000FF & getLastIPAddress());
     }
 }

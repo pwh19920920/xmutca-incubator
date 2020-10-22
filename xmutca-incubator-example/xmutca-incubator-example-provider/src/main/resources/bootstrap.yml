@@ -4,40 +4,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server_addr: 192.168.199.150:8848
+        server_addr: localhost:8848
       config:
-        server_addr: 192.168.199.150:8848
+        server_addr: localhost:8848
         file_extension: yml
-    sentinel:
-      eager: true
-      enabled: true
-      transport:
-        dashboard: localhost:8080
-      datasource:
-        flow:
-          nacos:
-            rule_type: FLOW
-            server_addr: ${spring.cloud.nacos.config.server_addr}
-            data_id: ${spring.application.name}_flow
-        degrade:
-          nacos:
-            rule_type: DEGRADE
-            server_addr: ${spring.cloud.nacos.config.server_addr}
-            data_id: ${spring.application.name}_degrade
-        param_flow:
-          nacos:
-            rule_type: PARAM_FLOW
-            server_addr: ${spring.cloud.nacos.config.server_addr}
-            data_id: ${spring.application.name}_param_flow
-        system:
-          nacos:
-            rule_type: SYSTEM
-            server_addr: ${spring.cloud.nacos.config.server_addr}
-            data_id: ${spring.application.name}_system
-        authority:
-          nacos:
-            rule_type: AUTHORITY
-            server_addr: ${spring.cloud.nacos.config.server_addr}
-            data_id: ${spring.application.name}_authority
-      filter:
-        enabled: false

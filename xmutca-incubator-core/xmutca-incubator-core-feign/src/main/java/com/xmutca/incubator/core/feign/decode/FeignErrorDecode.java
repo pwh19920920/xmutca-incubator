@@ -10,6 +10,8 @@ import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
+import java.nio.charset.Charset;
+
 /**
  * @author
  */
@@ -21,7 +23,7 @@ public class FeignErrorDecode implements ErrorDecoder {
         // 这一部分的异常将会变成子系统的异常, 不会进入hystrix的fallback方法，将会进入ErrorFilter的过滤链路
         if (response.status() >= HttpStatus.BAD_REQUEST.value() && response.status() < HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             try {
-                Result receipt = JSON.parseObject(Util.toString(response.body().asReader()), Result.class);
+                Result receipt = JSON.parseObject(Util.toString(response.body().asReader(Charset.defaultCharset())), Result.class);
                 BaseException ex = BaseException.getInstance(receipt);
                 return new HystrixBadRequestException(ex.getMessage(), ex);
             } catch (Exception e) {

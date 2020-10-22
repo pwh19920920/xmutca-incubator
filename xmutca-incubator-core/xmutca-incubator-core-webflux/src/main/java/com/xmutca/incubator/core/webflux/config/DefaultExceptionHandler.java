@@ -1,14 +1,13 @@
 package com.xmutca.incubator.core.webflux.config;
 
+import com.netflix.hystrix.exception.HystrixBadRequestException;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
 import com.xmutca.incubator.core.common.exception.BaseException;
 import com.xmutca.incubator.core.common.response.Receipt;
 import com.xmutca.incubator.core.common.response.Result;
-import com.xmutca.incubator.core.logger.message.ExceptionLoggerMessage;
 import feign.RetryableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
-import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
 
 import javax.validation.ConstraintViolation;
@@ -65,6 +63,20 @@ public class DefaultExceptionHandler {
     public Receipt handleHystrixRuntimeException(HystrixRuntimeException ex, ServerWebExchange exchange) {
         if (ex.getFallbackException().getCause().getCause() instanceof BaseException) {
             BaseException baseEx = (BaseException) ex.getFallbackException().getCause().getCause();
+            return handleBaseException(baseEx, exchange);
+        }
+        return new Receipt(HttpStatus.BAD_REQUEST.value(), "请求超时或发生业务熔断");
+    }
+
+    /**
+     * 请求超时或发生业务熔断失败
+     * @return
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {HystrixBadRequestException.class})
+    public Receipt handleHystrixBadRequestException(HystrixBadRequestException ex, ServerWebExchange exchange) {
+        if (ex.getCause() instanceof BaseException) {
+            BaseException baseEx = (BaseException) ex.getCause();
             return handleBaseException(baseEx, exchange);
         }
         return new Receipt(HttpStatus.BAD_REQUEST.value(), "请求超时或发生业务熔断");

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.net.InetAddress;
+
 /**
  * 雪花算法
  * @author pengweihuang
@@ -23,7 +25,7 @@ public class SnowflakeGeneratorProperties {
 
     private long workerId = MIN_WORKER_ID;
 
-    private long dataCenterId = MIN_WORKER_DATA_CENTER;
+    private long dataCenterId = 0x000000FF & getLastIPAddress();
 
     public long getWorkerId() {
         return workerId;
@@ -42,6 +44,23 @@ public class SnowflakeGeneratorProperties {
     public void setDataCenterId(long dataCenterId) {
         if (dataCenterId <= MAX_WORKER_DATA_CENTER && dataCenterId >= MIN_WORKER_DATA_CENTER) {
             this.dataCenterId = dataCenterId;
+        }
+    }
+
+    /**
+     * 用IP地址最后几个字节标示
+     * <p>
+     * eg:192.168.1.30->30
+     *
+     * @return last IP
+     */
+    private static byte getLastIPAddress() {
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            byte[] addressByte = inetAddress.getAddress();
+            return addressByte[addressByte.length - 1];
+        } catch (Exception e) {
+            throw new RuntimeException("Unknown Host Exception", e);
         }
     }
 }
