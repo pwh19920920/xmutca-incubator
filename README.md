@@ -55,11 +55,14 @@ https://shaozi.info/p/57222793944c1f684c52d450
 # gateway使用摘要
 gateway中实现了oauth授权，目前已支持密码登陆login_password，刷新密钥refresh_token
 1. 登陆login_password
+```
 curl --location --request POST 'http://localhost:8081/oauth/token' \
 --header 'Content-Type: application/json' \
 --data-raw '{"grant_type":"login_password", "client_id":"1", "client_secret": "1","password":"1231","username":"admin"}'
+```
 
 2. 刷新refresh_token
+```
 curl --location --request POST 'http://localhost:8081/oauth/token' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -68,8 +71,10 @@ curl --location --request POST 'http://localhost:8081/oauth/token' \
     "client_secret": "1",
     "refresh_token": "从login_password拿到的refresh_token"
 }'
+```
 
 3. 使用access_token
+```
 curl --location --request GET 'http://localhost:8081/consumer/test/xxx' \
 --header 'authorization: bearer 从login_password或者refresh_token取回来的access_token' \
---data-raw ''
+```
