@@ -47,7 +47,7 @@ public class FastJsonConfiguration {
 
         //附加：处理中文乱码（后期添加）
         List<MediaType> fastMediaTypes = new ArrayList<>();
-        fastMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+        fastMediaTypes.add(MediaType.APPLICATION_JSON);
         fastConverter.setSupportedMediaTypes(fastMediaTypes);
 
         //3、在convert中添加配置信息

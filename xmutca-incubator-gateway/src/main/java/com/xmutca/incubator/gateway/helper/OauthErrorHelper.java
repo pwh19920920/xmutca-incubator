@@ -3,7 +3,6 @@ package com.xmutca.incubator.gateway.helper;
 import com.xmutca.incubator.core.common.response.Result;
 import com.xmutca.incubator.gateway.dto.TokenResponseDto;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 
 /**
@@ -69,19 +68,19 @@ public enum OauthErrorHelper {
         this.msg = msg;
     }
 
-    public ResponseEntity getResp() {
-        return new ResponseEntity(new Result(this.status.value(), this.msg, new TokenResponseDto(this.code, this.msg)), this.status);
+    public Result getResp() {
+        return new Result(this.status.value(), this.msg, new TokenResponseDto(this.code, this.msg));
     }
 
-    public ResponseEntity getResp(String msg) {
-        return new ResponseEntity(new Result<>(this.status.value(), msg, new TokenResponseDto(this.code, msg)), this.status);
+    public Result getResp(String msg) {
+        return new Result<>(this.status.value(), msg, new TokenResponseDto(this.code, msg));
     }
 
-    public Mono<ResponseEntity> getMonoResp() {
+    public Mono<Result> getMonoResp() {
         return Mono.just(getResp());
     }
 
-    public Mono<ResponseEntity> getMonoResp(String msg) {
+    public Mono<Result> getMonoResp(String msg) {
         return Mono.just(getResp(msg));
     }
 }

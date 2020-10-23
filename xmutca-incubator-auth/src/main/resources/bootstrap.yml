@@ -8,5 +8,3 @@ spring:
       config:
         server_addr: localhost:8848
         file-extension: yml
-        shared-dataids: application.yml
-        refreshable-dataids: application.yml

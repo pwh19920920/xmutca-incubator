@@ -23,9 +23,9 @@ public class SnowflakeGeneratorProperties {
 
     public static final long MIN_WORKER_ID = 0;
 
-    private long workerId = MIN_WORKER_ID;
+    private long workerId = 0x000000FF & getLastIPAddress();
 
-    private long dataCenterId = 0x000000FF & getLastIPAddress();
+    private long dataCenterId = MIN_WORKER_DATA_CENTER;
 
     public long getWorkerId() {
         return workerId;

@@ -1,5 +1,5 @@
 server:
-  port: 8787
+  port: 8081
 
 # 暴露端点
 management:

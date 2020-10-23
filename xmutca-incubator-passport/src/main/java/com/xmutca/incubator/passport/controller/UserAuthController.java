@@ -1,13 +1,13 @@
 package com.xmutca.incubator.passport.controller;
 
 import cn.hutool.crypto.digest.DigestUtil;
+import com.xmutca.incubator.core.common.exception.ServiceException;
 import com.xmutca.incubator.core.common.response.Result;
 import com.xmutca.incubator.passport.model.UserLocalAuth;
 import com.xmutca.incubator.passport.service.UserLocalAuthService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,18 +35,18 @@ public class UserAuthController {
     public Result<Long> checkAndGetForUsername(String username, String password) {
         // 简单判断
         if (StringUtils.isAnyEmpty(username, password)) {
-            return new Result<>(HttpStatus.BAD_REQUEST.value(), "用户名或者密码不能为空");
+            throw new ServiceException("用户名或者密码不能为空");
         }
 
         // 获取数据
         UserLocalAuth userLocalAuth = userLocalAuthService.get(username);
         if (null == userLocalAuth) {
-            return new Result<>(HttpStatus.BAD_REQUEST.value(), "用户名或者密码错误");
+            throw new ServiceException("用户名或者密码错误");
         }
 
         // 校验一致性
         if (!encodePassword(userLocalAuth.getSalt(), password).equals(userLocalAuth.getPassword())) {
-            return new Result<>(HttpStatus.BAD_REQUEST.value(), "用户名或者密码错误");
+            throw new ServiceException("用户名或者密码错误");
         }
 
         // 返回数据

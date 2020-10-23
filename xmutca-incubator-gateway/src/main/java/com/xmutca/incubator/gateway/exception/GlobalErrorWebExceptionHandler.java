@@ -39,7 +39,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
         Result resp = JSON.parseObject(JSON.toJSONString(errorPropertiesMap), Result.class);
         return ServerResponse.status(resp.getStatus())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(BodyInserters.fromObject(resp));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(resp));
     }
 }

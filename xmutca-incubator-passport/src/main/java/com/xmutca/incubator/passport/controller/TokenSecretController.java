@@ -1,5 +1,6 @@
 package com.xmutca.incubator.passport.controller;
 
+import com.xmutca.incubator.core.common.exception.ServiceException;
 import com.xmutca.incubator.core.common.response.Result;
 import com.xmutca.incubator.passport.model.TokenSecret;
 import com.xmutca.incubator.passport.service.TokenSecretService;
@@ -78,7 +79,7 @@ public class TokenSecretController {
     @DeleteMapping("/logout")
     public Result<Integer> logout(String accessTokenId, String refreshTokenId) {
         if (StringUtils.isAnyEmpty(accessTokenId, refreshTokenId)) {
-            return new Result<>(HttpStatus.BAD_REQUEST.value(), "请求参数有误");
+            throw new ServiceException("请求参数有误");
         }
 
         int result = tokenSecretService.updateStatus(accessTokenId);

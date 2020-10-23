@@ -17,6 +17,7 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -51,6 +52,7 @@ public class DefaultExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = Exception.class)
     public Receipt handleException(Exception ex) {
+        ex.printStackTrace();
         return new Receipt(HttpStatus.INTERNAL_SERVER_ERROR.value(), "sorry, unknown error has occurred!");
     }
 
@@ -113,6 +115,17 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
     public Receipt handleNumberFormatException(MethodArgumentTypeMismatchException ex) {
         return new Receipt(HttpStatus.BAD_REQUEST.value(), "参数不匹配,请填写正确路径");
+    }
+
+    /**
+     * 不支持的媒体类型
+     * @param ex
+     * @return
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {UnsupportedMediaTypeStatusException.class})
+    public Receipt handleUnsupportedMediaTypeStatusException(UnsupportedMediaTypeStatusException ex) {
+        return new Receipt(HttpStatus.BAD_REQUEST.value(), "不支持的媒体类型");
     }
 
     /**

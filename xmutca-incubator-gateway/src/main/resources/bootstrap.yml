@@ -5,9 +5,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.199.150:8848
+        server-addr: localhost:8848
       config:
-        serverAddr: 192.168.199.150:8848
+        serverAddr: localhost:8848
         file-extension: yml
     gateway:
       routes:
@@ -83,8 +83,9 @@ spring:
       loadbalancer:
         use404: true # 意思是如果服务不存在，默认返回的是503，此功能开关代表返回的是404
   redis:
-    host: 192.168.199.150
-    port: 56379
+    host: localhost
+    port: 6379
+
 
 
 # hystrix 信号量隔离，10秒后自动超时
