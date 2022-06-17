@@ -16,7 +16,7 @@
 		<spring-boot-dependencies.version>2.2.10.RELEASE</spring-boot-dependencies.version>
 		<spring-alibaba.version>2.2.1.RELEASE</spring-alibaba.version>
 		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
-		<fastjson.version>1.2.56</fastjson.version>
+		<fastjson.version>1.2.83</fastjson.version>
 		<logstash-logback-encoder.verison>5.3</logstash-logback-encoder.verison>
 		<org.apache.skywalking.version>6.0.0-GA</org.apache.skywalking.version>
 		<spring-boot-admin.version>2.3.0</spring-boot-admin.version>
